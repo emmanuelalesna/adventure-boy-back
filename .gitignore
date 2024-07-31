@@ -1,5 +1,7 @@
 /Project2.app/obj
 /Project2.app/bin
+appsettings.json
 
 /Project2.tests/obj
 /Project2.tests/bin
+/Project2.tests/coveragereport
