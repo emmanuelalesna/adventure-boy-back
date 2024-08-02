@@ -37,14 +37,6 @@ public class PlayerRepo(ApplicationDbContext context) : IRepo<Player>
             .FirstOrDefaultAsync(t => t.PlayerId == id);
     }
 
-    /* public Task<Player> UpdateEntity(int id, Player updatePlayer)
-    {
-        Player oldPlayer = _context.Players.Find(id)!;
-        oldPlayer.Health = updateTrainer.Username;
-        oldPlayer.Level = updateTrainer.Password;
-        await _context.SaveChangesAsync();
-        return oldTrainer;
-    } */
     public async Task<Player> UpdateEntity(int id, Dictionary<string, object> updates)
     {
         Player originalPlayer = _context.Players.FirstOrDefault(p => p.PlayerId == id);
