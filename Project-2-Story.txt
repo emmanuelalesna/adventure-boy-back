@@ -1,0 +1,67 @@
+Scenario 1
+
+You come across your neighbor's old house but it seems like nobody is home. The door is wide open and you don't hear anything from inside the house. Upon entering the home you find that the place has been ransacked and most of the furniture is destroyed.
+
+Out from the bedroom, your zombified neighbor pops out looking for flesh to consume!
+
+As you collect yourself you find that your fallen neighbor had a few gold pieces on his person. You bury him, give him a make-shift headstone and continue making your way towards the kingdom.
+
+Scenario 2
+
+Leaving the property you venture into the woods. The further you travel, the more dense the forest becomes. You start to hear the howling creatures. What do you do?
+
+a) Prepare to fight -> Enter combat
+b) Run and hide -> Avoid wolves
+
+Scenario 3
+
+Moving along the trail you come across some bandits. "Give us all uv yer gold" the masked man growls. Him and his companion brandish their knives at you.
+
+a) Give them all your gold -> Set gold to 0
+b) Stand your ground and fight -> Enter combat
+
+Scenario 4
+
+When you finish your business with the bandits you hear a gust of wind blow by and all of a sudden there's a wagon behind you pulled by a stout pony.
+In the wagon is a cloaked figure who asks "Whadda ya buyin'?"
+
+Display options
+
+Scenario 5
+
+After shopping to your hearts content, you appear on the other of the forest. But bizarrely enough, it's snowing, in the middle of Summer.
+Something is clearly wrong, as apparent from a group of sentient snowmen approaching.
+
+Scenario 6
+
+It seems these snowmen have come from a small cave nearby, would you like to investigate?
+
+a) Check it out (Fight the ice wizard)
+b) Not worth it
+
+Scenario 7
+
+Onwards to the Kingdom where there's a peculiar sight. It seems that the guards of the gate have been replaced with an ogre.
+His big sharp teeth grin as he counts gold on a box he's using as a makeshift table. As you approach he smile fades as he stands up 
+readying a crude axe.
+
+a) Fight him
+b) Bribe him
+
+Scenario 8
+
+Entering the city you realize that it's mostly monsters walk around like they own the place! 
+Humans, elves, dwarves, all cowering in fear because no one will stand up to the mayhem they 
+are causing. You see a large gnoll stealing bread from an elven baker.
+
+a) Defend the baker
+b) Keep moving
+
+Scenario 9
+
+You finally make your way to the castle and in the main hall you see... not the king.
+You don't know who this guy is, but he looks evil and like he was expecting you. He stands and speaks
+"Ah excellent and here I thought this kingdom best warriors were all dead and gone". He prepares for a fight.
+
+a) Bow to him (Become a thrall, costs money)
+b) Regicide it is
