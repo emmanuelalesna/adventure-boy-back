@@ -10,4 +10,5 @@ public class Player
     public int Gold { get; set; } = 0;
     public Room CurrentRoom { get; set; }
     public List<Spell> Spells { get; set; } = [];
+    public List<Item> Items {get;set;} = [];
 }
