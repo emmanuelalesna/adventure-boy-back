@@ -15,9 +15,10 @@ public class PlayerRepo(ApplicationDbContext context) : IRepo<Player>
         return player;
     }
 
-    public async Task<Player> DeleteEntity(int id)
+    public async Task<Player?> DeleteEntity(int id)
     {
-        Player toDelete = _context.Players.Find(id);
+        var toDelete = await GetById(id);
+        if (toDelete is null) return null;
         _context.Players.Remove(toDelete);
         await _context.SaveChangesAsync();
         return toDelete;
@@ -25,21 +26,17 @@ public class PlayerRepo(ApplicationDbContext context) : IRepo<Player>
 
     public async Task<List<Player>> GetAllEntities()
     {
-        return await _context.Players
-            .Include(p => p.Spells)
-            .ToListAsync();
+        return await _context.Players.ToListAsync();
     }
 
-    public async Task<Player> GetById(int id)
+    public async Task<Player?> GetById(int id)
     {
-        return await _context.Players
-            .Include(t => t.Spells)
-            .FirstOrDefaultAsync(t => t.PlayerId == id);
+        return await _context.Players.FirstOrDefaultAsync(t => t.PlayerId == id);
     }
 
-    public async Task<Player> UpdateEntity(int id, Dictionary<string, object> updates)
+    public async Task<Player?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
-        Player originalPlayer = _context.Players.FirstOrDefault(p => p.PlayerId == id);
+        var originalPlayer = await GetById(id);
 
         if (originalPlayer != null)
         {
@@ -52,8 +49,8 @@ public class PlayerRepo(ApplicationDbContext context) : IRepo<Player>
                 }
 
             }
+            await _context.SaveChangesAsync();
         }
-        await _context.SaveChangesAsync();
-        return originalPlayer;
+        return null;
     }
 }

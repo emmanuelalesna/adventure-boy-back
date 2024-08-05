@@ -5,7 +5,6 @@ namespace Project2.app.DataAccess;
 
 public class ShopRepo(ApplicationDbContext context) : IRepo<Shop>
 {
-
     private readonly ApplicationDbContext _context = context;
 
     public async Task<Shop> CreateEntity(Shop shop)
@@ -15,9 +14,10 @@ public class ShopRepo(ApplicationDbContext context) : IRepo<Shop>
         return shop;
     }
 
-    public async Task<Shop> DeleteEntity(int id)
+    public async Task<Shop?> DeleteEntity(int id)
     {
-        Shop toDelete = _context.Shops.Find(id);
+        var toDelete = await GetById(id);
+        if (toDelete is null) return null;
         _context.Shops.Remove(toDelete);
         await _context.SaveChangesAsync();
         return toDelete;
@@ -25,29 +25,17 @@ public class ShopRepo(ApplicationDbContext context) : IRepo<Shop>
 
     public async Task<List<Shop>> GetAllEntities()
     {
-        return await _context.Shops
-            .Include(s => s.Items)
-            .ToListAsync();
+        return await _context.Shops.ToListAsync();
     }
 
-    public async Task<Shop> GetById(int id)
+    public async Task<Shop?> GetById(int id)
     {
-        return await _context.Shops
-            .Include(s => s.Items)
-            .FirstOrDefaultAsync(t => t.ShopId == id);
+        return await _context.Shops.FirstOrDefaultAsync(t => t.ShopId == id);
     }
 
-    /* public Task<Player> UpdateEntity(int id, Player updatePlayer)
+    public async Task<Shop?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
-        Player oldPlayer = _context.Players.Find(id)!;
-        oldPlayer.Health = updateTrainer.Username;
-        oldPlayer.Level = updateTrainer.Password;
-        await _context.SaveChangesAsync();
-        return oldTrainer;
-    } */
-    public async Task<Shop> UpdateEntity(int id, Dictionary<string, object> updates)
-    {
-        Shop originalShop = _context.Shops.FirstOrDefault(p => p.ShopId == id);
+        var originalShop = await GetById(id);
 
         if (originalShop != null)
         {
@@ -60,8 +48,8 @@ public class ShopRepo(ApplicationDbContext context) : IRepo<Shop>
                 }
 
             }
+            await _context.SaveChangesAsync();
         }
-        await _context.SaveChangesAsync();
-        return originalShop;
+        return null;
     }
 }

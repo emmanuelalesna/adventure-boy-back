@@ -14,9 +14,10 @@ public class AccountRepo(ApplicationDbContext context) : IRepo<Account>
         return account;
     }
 
-    public async Task<Account> DeleteEntity(int id)
+    public async Task<Account?> DeleteEntity(int id)
     {
-        Account toDelete = _context.Accounts.Find(id);
+        var toDelete = await GetById(id);
+        if (toDelete is null) return null;
         _context.Accounts.Remove(toDelete);
         await _context.SaveChangesAsync();
         return toDelete;
@@ -27,14 +28,14 @@ public class AccountRepo(ApplicationDbContext context) : IRepo<Account>
         return await _context.Accounts.ToListAsync();
     }
 
-    public async Task<Account> GetById(int id)
+    public async Task<Account?> GetById(int id)
     {
         return await _context.Accounts.FirstOrDefaultAsync(t => t.AccountId == id);
     }
 
-    public async Task<Account> UpdateEntity(int id, Dictionary<string, object> updates)
+    public async Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
-         Account originalAccount = _context.Accounts.FirstOrDefault(p => p.AccountId == id);
+        var originalAccount = await GetById(id);
 
         if (originalAccount != null)
         {
@@ -47,8 +48,8 @@ public class AccountRepo(ApplicationDbContext context) : IRepo<Account>
                 }
 
             }
+            await _context.SaveChangesAsync();
         }
-        await _context.SaveChangesAsync();
-        return originalAccount;
+        return null;
     }
 }
