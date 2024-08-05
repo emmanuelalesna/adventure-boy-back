@@ -33,9 +33,9 @@ public class PlayerService(IRepo<Player> playerRepo) : IService<Player>
         throw new NotImplementedException();
     }
 
-    public Task<List<Player>> GetAllEntities()
+    public async Task<List<Player>> GetAllEntities()
     {
-        throw new NotImplementedException();
+        return await _playerRepo.GetAllEntities();
     }
 
     public async Task<Player?> GetEntityById(int id)

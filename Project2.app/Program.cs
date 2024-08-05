@@ -13,8 +13,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors(co => {
-    co.AddPolicy("CORS" , pb =>{
+builder.Services.AddCors(co =>
+{
+    co.AddPolicy("CORS", pb =>
+    {
         pb.WithOrigins("*")
         .AllowAnyHeader();
     });
@@ -38,6 +40,12 @@ builder.Services.AddScoped<IService<Player>, PlayerService>();
 builder.Services.AddScoped<IService<Room>, RoomService>();
 builder.Services.AddScoped<IService<Shop>, ShopService>();
 builder.Services.AddScoped<IService<Spell>, SpellService>();
+
+builder.Services.AddControllers()
+.AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
