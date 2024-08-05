@@ -1,55 +1,37 @@
+using Project2.app.DataAccess;
 using Project2.app.Models;
-using Microsoft.EntityFrameworkCore;
+using Project2.app.Services.Interface;
 
-namespace Project2.app.DataAccess;
+namespace Project2.app.Services;
 
-public class RoomRepo(ApplicationDbContext context) : IRepo<Room>
-{
-    private readonly ApplicationDbContext _context = context;
+public class RoomService(IRepo<Room> IRoomRepo) : IService<Room> {
 
-    public async Task<Room> CreateEntity(Room room)
+    private readonly IRepo<Room> _RoomRepo = IRoomRepo;
+
+    public Task<Room> CreateNewEntity(Room entityToCreate)
     {
-        _context.Rooms.Add(room);
-        await _context.SaveChangesAsync();
-        return room;
+        throw new NotImplementedException();
     }
 
-    public async Task<Room?> DeleteEntity(int id)
+    public Task<Room?> DeleteEntity(int id)
     {
-        var toDelete = await GetById(id);
-        if (toDelete is null) return null;
-        _context.Rooms.Remove(toDelete);
-        await _context.SaveChangesAsync();
-        return toDelete;
+        throw new NotImplementedException();
     }
 
     public async Task<List<Room>> GetAllEntities()
     {
-        return await _context.Rooms.ToListAsync();
+
+        return await _RoomRepo.GetAllEntities();
     }
 
-    public async Task<Room?> GetById(int id)
+    public async Task<Room?> GetEntityById(int id)
     {
-        return await _context.Rooms.FirstOrDefaultAsync(t => t.RoomId == id);
+        return await _RoomRepo.GetById(id);
     }
 
-    public async Task<Room?> UpdateEntity(int id, Dictionary<string, object> updates)
+    public Task<Room?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
-        var originalRoom = await GetById(id);
-
-        if (originalRoom != null)
-        {
-            foreach (var update in updates)
-            {
-                var property = originalRoom.GetType().GetProperty(update.Key);
-                if (property != null & property.CanWrite)
-                {
-                    property.SetValue(originalRoom, update.Value);
-                }
-
-            }
-            await _context.SaveChangesAsync();
-        }
-        return null;
+        throw new NotImplementedException();
     }
+
 }
