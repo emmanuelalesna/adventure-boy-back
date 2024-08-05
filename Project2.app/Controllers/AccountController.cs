@@ -1,24 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
 using Project2.app.Models;
 using Project2.app.Services;
+using Project2.app.Services.Interface;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Project2.app.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly AccountService _accountService;
+        private readonly IService<Account> _accountService;
 
-        public AccountController(AccountService accountService)
+        public AccountController(IService<Account> accountService)
         {
             _accountService = accountService;
         }
 
         // Create a new account
-        [HttpPost("Create")]
+        [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] Account account)
         {
             if (account == null || string.IsNullOrWhiteSpace(account.Username) || string.IsNullOrWhiteSpace(account.Password))
@@ -42,7 +43,7 @@ namespace Project2.app.Controllers
         }
 
         // Get all accounts
-        [HttpGet("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> GetAllAccounts()
         {
             try
@@ -57,7 +58,7 @@ namespace Project2.app.Controllers
         }
 
         // Get account by ID
-        [HttpGet("Get/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetAccountById(int id)
         {
             try
@@ -74,7 +75,7 @@ namespace Project2.app.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+/*
         // Update account by ID
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] Dictionary<string, object> updates)
@@ -93,9 +94,9 @@ namespace Project2.app.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+*/
         // Delete account by ID
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccount(int id)
         {
             try

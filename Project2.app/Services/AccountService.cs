@@ -41,9 +41,9 @@ public class AccountService(IRepo<Account> IAccountRepo) : IService<Account>
         }
     }
 
-    public Task<List<Account>> GetAllEntities()
+    public async Task<List<Account>> GetAllEntities()
     {
-        throw new NotImplementedException();
+        return await _accountRepo.GetAllEntities();
     }
 
     public async Task<Account?> GetEntityById(int id)
