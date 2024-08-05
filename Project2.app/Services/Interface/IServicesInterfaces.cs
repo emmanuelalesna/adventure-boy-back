@@ -1,16 +1,14 @@
-using Project2.app.Models;
-
-namespace Project2.app.DataAccess;
+namespace Project2.app.Services.Interface;
 
 public interface IService<Type>
 {
     Task<Type> CreateNewEntity(Type entityToCreate);
 
-    Task<Type> DeleteNewEntity(Type entityToDelete);
+    Task<Type?> DeleteEntity(int id);
 
-    Task<Type> UpdateNewEntity(int id, Dictionary<string, object> updates);
+    Task<Type?> UpdateEntity(int id, Dictionary<string, object> updates);
 
-    Task<Type> GetEntityByI(int id);
+    Task<Type?> GetEntityById(int id);
 
     Task<List<Type>> GetAllEntities();
 

@@ -13,9 +13,10 @@ public class EnemyRepo(ApplicationDbContext context) : IRepo<Enemy>
         return enemy;
     }
 
-    public async Task<Enemy> DeleteEntity(int id)
+    public async Task<Enemy?> DeleteEntity(int id)
     {
-        Enemy toDelete = _context.Enemies.Find(id);
+        var toDelete = await GetById(id);
+        if (toDelete is null) return null;
         _context.Enemies.Remove(toDelete);
         await _context.SaveChangesAsync();
         return toDelete;
@@ -26,14 +27,14 @@ public class EnemyRepo(ApplicationDbContext context) : IRepo<Enemy>
         return await _context.Enemies.ToListAsync();
     }
 
-    public async Task<Enemy> GetById(int id)
+    public async Task<Enemy?> GetById(int id)
     {
         return await _context.Enemies.FirstOrDefaultAsync(t => t.EnemyId == id);
     }
 
-    public async Task<Enemy> UpdateEntity(int id, Dictionary<string, object> updates)
+    public async Task<Enemy?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
-        Enemy originalEnemy = _context.Enemies.FirstOrDefault(p => p.EnemyId == id);
+        var originalEnemy = await GetById(id);
 
         if (originalEnemy != null)
         {
@@ -45,8 +46,8 @@ public class EnemyRepo(ApplicationDbContext context) : IRepo<Enemy>
                     property.SetValue(originalEnemy, update.Value);
                 }
             }
+            await _context.SaveChangesAsync();
         }
-        await _context.SaveChangesAsync();
-        return originalEnemy;
+        return null;
     }
 }
