@@ -4,27 +4,27 @@ using Project2.app.Services;
 
 namespace Project2.app.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public class ItemController : ControllerBase
 {
-    private readonly ILogger<ItemController> _logger;
     private readonly ItemService _itemService;
 
-    public ItemController(ILogger<ItemController> logger, ItemService itemService)
+    public ItemController(ItemService itemService)
     {
-        _logger = logger;
         _itemService = itemService;
     }
 
-    [HttpGet("/GetItems")]
-    public IActionResult GetAll()
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
     {
-        return Ok(_itemService.GetAllEntities());
+        return Ok(await _itemService.GetAllEntities());
     }
 
-    [HttpGet("GetItems/{item_id}")]
-    public IActionResult GetItem(int item_id)
+    [HttpGet("{item_id}")]
+    public async Task<IActionResult> GetItem(int item_id)
     {
-        var item = _itemService.GetEntityById(item_id);
+        var item = await _itemService.GetEntityById(item_id);
 
         if (item is null) return NotFound("Item doesn't Exist");
         return Ok(item);
