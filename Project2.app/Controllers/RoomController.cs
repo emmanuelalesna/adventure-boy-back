@@ -4,27 +4,27 @@ using Project2.app.Services;
 
 namespace Project2.app.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public class RoomController : ControllerBase
 {
-    private readonly ILogger<RoomController> _logger;
     private readonly RoomService _roomService;
 
-    public RoomController(ILogger<RoomController> logger, RoomService roomService)
+    public RoomController(RoomService roomService)
     {
-        _logger = logger;
         _roomService = roomService;
     }
 
-    [HttpGet("/GetRooms")]
+    [HttpGet]
     public IActionResult GetAll()
     {
         return Ok(_roomService.GetAllEntities());
     }
 
-    [HttpGet("GetRooms/{room_id}")]
-    public IActionResult GetRoom(int room_id)
+    [HttpGet("{room_id}")]
+    public async Task<IActionResult> GetRoom(int room_id)
     {
-        var room = _roomService.GetEntityById(room_id);
+        var room = await _roomService.GetEntityById(room_id);
 
         if (room is null) return NotFound("Room doesn't Exist");
         return Ok(room);
