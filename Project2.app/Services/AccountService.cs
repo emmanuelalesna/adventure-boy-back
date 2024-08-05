@@ -6,14 +6,14 @@ namespace Project2.app.Services;
 
 public class AccountService(IRepo<Account> IAccountRepo) : IService<Account>
 {
-    private readonly IRepo<Account> _AccountRepo = IAccountRepo;
+    private readonly IRepo<Account> _accountRepo = IAccountRepo;
     public async Task<Account> CreateNewEntity(Account entityToCreate)
     {
         try
         {
             if (entityToCreate.Username != null && entityToCreate.Password != null)
             {
-                return await _AccountRepo.CreateEntity(entityToCreate);
+                return await _accountRepo.CreateEntity(entityToCreate);
             }
             else
             {
@@ -33,7 +33,7 @@ public class AccountService(IRepo<Account> IAccountRepo) : IService<Account>
         {
             var account = await GetEntityById(id);
             if (account is null) return null;
-            return await _AccountRepo.DeleteEntity(id);
+            return await _accountRepo.DeleteEntity(id);
         }
         catch (Exception)
         {
@@ -48,7 +48,7 @@ public class AccountService(IRepo<Account> IAccountRepo) : IService<Account>
 
     public async Task<Account?> GetEntityById(int id)
     {
-        return await _AccountRepo.GetById(id);
+        return await _accountRepo.GetById(id);
     }
 
     public Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates)

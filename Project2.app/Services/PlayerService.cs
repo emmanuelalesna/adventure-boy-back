@@ -4,9 +4,9 @@ using Project2.app.Services.Interface;
 
 namespace Project2.app.Services;
 
-public class PlayerServices(IRepo<Player> PlayerRepo) : IService<Player>
+public class PlayerService(IRepo<Player> playerRepo) : IService<Player>
 {
-    private readonly IRepo<Player> _PlayerRepo = PlayerRepo;
+    private readonly IRepo<Player> _playerRepo = playerRepo;
 
     public async Task<Player> CreateNewEntity(Player entityToCreate)
     {
@@ -14,7 +14,7 @@ public class PlayerServices(IRepo<Player> PlayerRepo) : IService<Player>
         {
             if (entityToCreate.Name != null)
             {
-                return await _PlayerRepo.CreateEntity(entityToCreate);
+                return await _playerRepo.CreateEntity(entityToCreate);
             }
             else
             {
@@ -33,19 +33,19 @@ public class PlayerServices(IRepo<Player> PlayerRepo) : IService<Player>
         throw new NotImplementedException();
     }
 
-    public Task<List<Player>> GetAllEntities()
+    public async Task<List<Player>> GetAllEntities()
     {
-        throw new NotImplementedException();
+        return await _playerRepo.GetAllEntities();
     }
 
     public async Task<Player?> GetEntityById(int id)
     {
-        return await _PlayerRepo.GetById(id);
+        return await _playerRepo.GetById(id);
     }
 
     public async Task<Player?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
-        return await _PlayerRepo.UpdateEntity(id, updates);
+        return await _playerRepo.UpdateEntity(id, updates);
     }
 
 
