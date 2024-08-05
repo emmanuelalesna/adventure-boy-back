@@ -51,7 +51,7 @@ public class AccountService(IRepo<Account> IAccountRepo) : IService<Account>
         return await _AccountRepo.GetById(id);
     }
 
-    public Task<Account> UpdateEntity(int id, Dictionary<string, object> updates)
+    public Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
         throw new NotImplementedException();
     }

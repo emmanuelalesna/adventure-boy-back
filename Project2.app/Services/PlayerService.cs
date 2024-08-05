@@ -1,0 +1,92 @@
+using Project2.app.DataAccess;
+using Project2.app.Models;
+using Project2.app.Services.Interface;
+
+namespace Project2.app.Services;
+
+public class PlayerServices(IRepo<Player> PlayerRepo) : IService<Player>
+{
+    private readonly IRepo<Player> _PlayerRepo = PlayerRepo;
+
+    public async Task<Player> CreateNewEntity(Player entityToCreate)
+    {
+        try
+        {
+            if (entityToCreate.Name != null)
+            {
+                return await _PlayerRepo.CreateEntity(entityToCreate);
+            }
+            else
+            {
+                throw new InvalidDataException("Name cannot be empty.");
+            }
+        }
+        catch (InvalidDataException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public Task<Player?> DeleteEntity(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<Player>> GetAllEntities()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Player?> GetEntityById(int id)
+    {
+        return await _PlayerRepo.GetById(id);
+    }
+
+    public async Task<Player?> UpdateEntity(int id, Dictionary<string, object> updates)
+    {
+        return await _PlayerRepo.UpdateEntity(id, updates);
+    }
+
+
+    /*
+    public void UpdateFields(int PlayerID, Dictionary<string, object> updates)
+    //will take the playerID, and search for it in the database, then assign originalPlayer to that, then only make updates
+    // to ones that had changes made
+    {
+        Player originalPlayer = _context.Players.FirstOrDefault(p => p.PlayerId == PlayerID);
+ 
+        if (originalPlayer != null)
+        {
+            foreach (var update in updates)
+            {
+                var property = originalPlayer.GetType().GetProperty(update.Key);
+                if (property != null & property.CanWrite)
+                {
+                    property.SetValue(originalPlayer, update.Value);
+                }
+ 
+            }
+        }
+        _context.SaveChanges();
+ 
+         example of how to make a change
+ 
+        var dao = new PlayerDAO(context);
+ 
+        updates = new Dictionary<string, object>
+        {
+            { "FirstName", newFirstNameValue },
+            { "Health", newHealthValue }
+        }       ;
+ 
+        dao.Update(playerItemsID, updates);
+    }
+    public void UpdateFields(Dictionary<string, object> updates)
+    {
+        _playerDAO.UpdateFields(State.currentPlayer.PlayerId, updates);
+        var loggedInPlayer = _playerDAO.GetByLoginID(Utility.State.currentLogin.LoginId);
+        State.currentPlayer = loggedInPlayer;
+    }
+    */
+}
