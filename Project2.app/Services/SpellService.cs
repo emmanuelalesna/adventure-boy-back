@@ -25,7 +25,7 @@ public class SpellService(IRepo<Spell> ISpellRepo) : IService<Spell>
 
     public async Task<Spell?> GetEntityById(int id)
     {
-        if (id < 1) throw new Exception("Spell Id cannot be less than 1");
+        if (id < 1 || id == null) throw new Exception("Spell Id cannot be less than 1");
         return await _SpellRepo.GetById(id);
     }
 
