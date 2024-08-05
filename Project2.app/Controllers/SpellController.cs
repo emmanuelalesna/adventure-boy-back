@@ -5,7 +5,7 @@ using Project2.app.Services;
 namespace Project2.app.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class SpellController : ControllerBase
     {
         private readonly SpellService _spellService;

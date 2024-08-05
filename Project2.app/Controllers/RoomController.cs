@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Project2.app.Models;
-using Project2.app.Services;
+using Project2.app.Services.Interface;
 
 namespace Project2.app.Controllers;
 
@@ -8,17 +8,17 @@ namespace Project2.app.Controllers;
 [Route("api/[controller]")]
 public class RoomController : ControllerBase
 {
-    private readonly RoomService _roomService;
+    private readonly IService<Room> _roomService;
 
-    public RoomController(RoomService roomService)
+    public RoomController(IService<Room> roomService)
     {
         _roomService = roomService;
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAllRooms()
     {
-        return Ok(_roomService.GetAllEntities());
+        return Ok(await _roomService.GetAllEntities());
     }
 
     [HttpGet("{room_id}")]

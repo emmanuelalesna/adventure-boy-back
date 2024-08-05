@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Project2.app.Models;
 using Project2.app.Services;
+using Project2.app.Services.Interface;
 
 namespace Project2.app.Controllers;
 
@@ -8,9 +9,9 @@ namespace Project2.app.Controllers;
 [Route("api/[controller]")]
 public class ItemController : ControllerBase
 {
-    private readonly ItemService _itemService;
+    private readonly IService<Item> _itemService;
 
-    public ItemController(ItemService itemService)
+    public ItemController(IService<Item> itemService)
     {
         _itemService = itemService;
     }
