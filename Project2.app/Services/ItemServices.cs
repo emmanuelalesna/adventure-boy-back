@@ -1,4 +1,4 @@
-using Project2.app.DataAccess;
+using Project2.app.DataAccess.Interfaces;
 using Project2.app.Models;
 using Project2.app.Services.Interface;
 

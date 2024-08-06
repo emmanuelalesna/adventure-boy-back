@@ -1,5 +1,6 @@
 using Project2.app.Models;
 using Microsoft.EntityFrameworkCore;
+using Project2.app.DataAccess.Interfaces;
 
 namespace Project2.app.DataAccess;
 

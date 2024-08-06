@@ -1,12 +1,12 @@
-using Project2.app.DataAccess;
+using Project2.app.DataAccess.Interfaces;
 using Project2.app.Models;
 using Project2.app.Services.Interface;
 
 namespace Project2.app.Services;
 
-public class AccountService(IRepo<Account> IAccountRepo) : IService<Account>
+public class AccountService(IAccountRepo IAccountRepo) : IAccountService
 {
-    private readonly IRepo<Account> _accountRepo = IAccountRepo;
+    private readonly IAccountRepo _accountRepo = IAccountRepo;
     public async Task<Account> CreateNewEntity(Account entityToCreate)
     {
         try
@@ -44,6 +44,11 @@ public class AccountService(IRepo<Account> IAccountRepo) : IService<Account>
     public async Task<List<Account>> GetAllEntities()
     {
         return await _accountRepo.GetAllEntities();
+    }
+
+    public async Task<Account?> GetEntityByUsername(string username)
+    {
+        return await _accountRepo.GetByUsername(username);
     }
 
     public async Task<Account?> GetEntityById(int id)

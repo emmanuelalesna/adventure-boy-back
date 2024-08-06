@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Project2.app.Models;
-using Project2.app.Services;
 using Project2.app.Services.Interface;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Project2.app.Controllers
 {
@@ -11,9 +8,9 @@ namespace Project2.app.Controllers
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly IService<Account> _accountService;
+        private readonly IAccountService _accountService;
 
-        public AccountController(IService<Account> accountService)
+        public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
         }
@@ -29,8 +26,7 @@ namespace Project2.app.Controllers
 
             try
             {
-                var createdAccount = await _accountService.CreateNewEntity(account);
-                return CreatedAtAction(nameof(GetAccountById), new { id = createdAccount.AccountId }, createdAccount);
+                return Ok(await _accountService.CreateNewEntity(account));
             }
             catch (InvalidDataException e)
             {
@@ -57,7 +53,16 @@ namespace Project2.app.Controllers
             }
         }
 
+        // Get by username
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetEntityByUsername(string username)
+        {
+            var account = await _accountService.GetEntityByUsername(username);
+            if (account is null) return NotFound("Account not found.");
+            return Ok(account);
+        }
         // Get account by ID
+        /*
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAccountById(int id)
         {
@@ -75,26 +80,27 @@ namespace Project2.app.Controllers
                 return BadRequest(e.Message);
             }
         }
-/*
-        // Update account by ID
-        [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateAccount(int id, [FromBody] Dictionary<string, object> updates)
-        {
-            try
-            {
-                var updatedAccount = await _accountService.UpdateEntity(id, updates);
-                if (updatedAccount == null)
+        */
+        /*
+                // Update account by ID
+                [HttpPut("Update/{id}")]
+                public async Task<IActionResult> UpdateAccount(int id, [FromBody] Dictionary<string, object> updates)
                 {
-                    return NotFound("Account not found.");
+                    try
+                    {
+                        var updatedAccount = await _accountService.UpdateEntity(id, updates);
+                        if (updatedAccount == null)
+                        {
+                            return NotFound("Account not found.");
+                        }
+                        return Ok(updatedAccount);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e.Message);
+                    }
                 }
-                return Ok(updatedAccount);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-*/
+        */
         // Delete account by ID
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccount(int id)
