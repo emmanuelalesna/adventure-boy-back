@@ -25,7 +25,7 @@ public class ShopService(IRepo<Shop> IShopRepo) : IService<Shop>
 
     public async Task<Shop?> GetEntityById(int id)
     {
-        if (id < 1 || id == null) throw new Exception("Spell Id cannot be less than 1");
+        if (id < 1) throw new Exception("Spell Id cannot be less than 1");
         return await _ShopRepo.GetById(id);
     }
 

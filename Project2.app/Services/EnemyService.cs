@@ -25,7 +25,7 @@ public class EnemyService(IRepo<Enemy> IEnemyRepo) : IService<Enemy>
 
     public async Task<Enemy?> GetEntityById(int id)
     {
-        if (id < 1 || id == null) throw new Exception("Enemy Id cannot be less than 1");
+        if (id < 1) throw new Exception("Enemy Id cannot be less than 1");
         return await _EnemyRepo.GetById(id);
     }
 
