@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Project2.app.DataAccess;
+using Project2.app.DataAccess.Interfaces;
 using Project2.app.Models;
 using Project2.app.Services;
 using Project2.app.Services.Interface;
@@ -25,7 +26,7 @@ builder.Services.AddCors(co =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IRepo<Account>, AccountRepo>();
+builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IRepo<Enemy>, EnemyRepo>();
 builder.Services.AddScoped<IRepo<Item>, ItemRepo>();
 builder.Services.AddScoped<IRepo<Player>, PlayerRepo>();
@@ -33,7 +34,7 @@ builder.Services.AddScoped<IRepo<Room>, RoomRepo>();
 builder.Services.AddScoped<IRepo<Shop>, ShopRepo>();
 builder.Services.AddScoped<IRepo<Spell>, SpellRepo>();
 
-builder.Services.AddScoped<IService<Account>, AccountService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IService<Enemy>, EnemyService>();
 builder.Services.AddScoped<IService<Item>, ItemService>();
 builder.Services.AddScoped<IService<Player>, PlayerService>();

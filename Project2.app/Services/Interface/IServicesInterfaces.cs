@@ -1,3 +1,5 @@
+using Project2.app.Models;
+
 namespace Project2.app.Services.Interface;
 
 public interface IService<Type>
@@ -12,4 +14,14 @@ public interface IService<Type>
 
     Task<List<Type>> GetAllEntities();
 
+}
+
+public interface IAccountService
+{
+    Task<Account> CreateNewEntity(Account entityToCreate);
+    Task<Account?> DeleteEntity(int id);
+    Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates);
+    Task<Account?> GetEntityById(int id);
+    Task<List<Account>> GetAllEntities();
+    Task<Account?> GetEntityByUsername(string username);
 }

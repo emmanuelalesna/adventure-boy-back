@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Project2.app.DataAccess.Interfaces;
 using Project2.app.Models;
 
 namespace Project2.app.DataAccess;
 
-public class AccountRepo(ApplicationDbContext context) : IRepo<Account>
+public class AccountRepo(ApplicationDbContext context) : IAccountRepo
 {
     private readonly ApplicationDbContext _context = context;
 
@@ -22,7 +23,10 @@ public class AccountRepo(ApplicationDbContext context) : IRepo<Account>
         await _context.SaveChangesAsync();
         return toDelete;
     }
-
+    public async Task<Account?> GetByUsername(string username)
+    {
+        return await _context.Accounts.FirstOrDefaultAsync(a => a.Username == username);
+    }
     public async Task<List<Account>> GetAllEntities()
     {
         return await _context.Accounts.ToListAsync();
