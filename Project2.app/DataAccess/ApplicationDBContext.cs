@@ -27,6 +27,10 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Enemy>().HasData(new Enemy { EnemyId = 1, EnemyName = "Angry Wolf", Attack = 1, Health = 3, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=end-the-festivities" });
 
         modelBuilder.Entity<Room>().HasData(new Room { RoomId = 1, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=bayou" });
+
+        modelBuilder.Entity<Item>().HasData(new Item { ItemId = 1, ItemName = "Bronze Sword", Attack = 1, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=bronze-sword" });
+
+        modelBuilder.Entity<Spell>().HasData(new Spell { SpellId = 1, SpellName = "Lightning Bolt", Attack = 2, ManaCost = 1, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=lightning-bolt" });
     }
 
 
