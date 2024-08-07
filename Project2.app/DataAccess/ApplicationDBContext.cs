@@ -23,5 +23,9 @@ public class ApplicationDbContext : DbContext
         .HasOne(p => p.AccountOwner)
         .WithOne(a => a.OwnedPlayer)
         .HasForeignKey<Player>(p => p.PlayerId);
+
+        modelBuilder.Entity<Room>().HasData(new Room { RoomId = -1, ImageUrl = "https://api.scryfall.com/cards/random" });
     }
+
+
 }
