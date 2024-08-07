@@ -24,7 +24,9 @@ public class ApplicationDbContext : DbContext
         .WithOne(a => a.OwnedPlayer)
         .HasForeignKey<Player>(p => p.PlayerId);
 
-        modelBuilder.Entity<Room>().HasData(new Room { RoomId = -1, ImageUrl = "https://api.scryfall.com/cards/random" });
+        modelBuilder.Entity<Enemy>().HasData(new Enemy { EnemyId = 1, EnemyName = "Angry Wolf", Attack = 1, Health = 3, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=end-the-festivities" });
+
+        modelBuilder.Entity<Room>().HasData(new Room { RoomId = 1, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=bayou" });
     }
 
 
