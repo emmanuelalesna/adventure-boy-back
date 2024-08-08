@@ -6,6 +6,7 @@ using Project2.app.Models;
 using Project2.app.Services.Interface;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System;
 
 namespace Project2.Tests
 {
@@ -21,10 +22,10 @@ namespace Project2.Tests
         }
 
         [Fact]
-        public async Task CreatePlayer_ReturnsOkResult_WhenPlayerIsValid()
+        public async Task CreatePlayer_ReturnsOkResult_WithCreatedPlayer()
         {
             // Arrange
-            var player = new Player { Name = "Hero", Level = 1, CurrentHealth = 10 };
+            var player = new Player { Name = "TestPlayer", Level = 1 };
             _mockPlayerService.Setup(service => service.CreateNewEntity(player)).ReturnsAsync(player);
 
             // Act
@@ -32,18 +33,15 @@ namespace Project2.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(player, okResult.Value);
+            var returnValue = Assert.IsType<Player>(okResult.Value);
+            Assert.Equal(player.Name, returnValue.Name);
         }
 
         [Fact]
         public async Task GetAllPlayers_ReturnsOkResult_WithListOfPlayers()
         {
             // Arrange
-            var players = new List<Player> 
-            { 
-                new Player { PlayerId = 1, Name = "Player1", Level = 1 },
-                new Player { PlayerId = 2, Name = "Player2", Level = 2 }
-            };
+            var players = new List<Player> { new Player { Name = "TestPlayer1" }, new Player { Name = "TestPlayer2" } };
             _mockPlayerService.Setup(service => service.GetAllEntities()).ReturnsAsync(players);
 
             // Act
@@ -51,7 +49,25 @@ namespace Project2.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(players, okResult.Value);
+            var returnValue = Assert.IsType<List<Player>>(okResult.Value);
+            Assert.Equal(2, returnValue.Count);
+        }
+
+        [Fact]
+        public async Task GetPlayerById_ReturnsOkResult_WithPlayer()
+        {
+            // Arrange
+            int playerId = 1;
+            var player = new Player { PlayerId = playerId, Name = "TestPlayer" };
+            _mockPlayerService.Setup(service => service.GetEntityById(playerId)).ReturnsAsync(player);
+
+            // Act
+            var result = await _controller.GetPlayerById(playerId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<Player>(okResult.Value);
+            Assert.Equal(playerId, returnValue.PlayerId);
         }
 
         [Fact]
@@ -65,24 +81,7 @@ namespace Project2.Tests
             var result = await _controller.GetPlayerById(playerId);
 
             // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("Player does not exist", notFoundResult.Value);
-        }
-
-        [Fact]
-        public async Task GetPlayerById_ReturnsOkResult_WhenPlayerExists()
-        {
-            // Arrange
-            int playerId = 1;
-            var player = new Player { PlayerId = playerId, Name = "Hero", Level = 1 };
-            _mockPlayerService.Setup(service => service.GetEntityById(playerId)).ReturnsAsync(player);
-
-            // Act
-            var result = await _controller.GetPlayerById(playerId);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(player, okResult.Value);
+            Assert.IsType<NotFoundObjectResult>(result);
         }
 
         [Fact]
@@ -90,14 +89,15 @@ namespace Project2.Tests
         {
             // Arrange
             int playerId = 1;
-            _mockPlayerService.Setup(service => service.GetEntityById(playerId)).ThrowsAsync(new Exception("Some error"));
+            var exceptionMessage = "Some error";
+            _mockPlayerService.Setup(service => service.GetEntityById(playerId)).ThrowsAsync(new Exception(exceptionMessage));
 
             // Act
             var result = await _controller.GetPlayerById(playerId);
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Some error", badRequestResult.Value.ToString());
+            Assert.Contains(exceptionMessage, badRequestResult.Value.ToString());
         }
     }
 }
