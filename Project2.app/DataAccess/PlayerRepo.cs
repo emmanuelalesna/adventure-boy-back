@@ -52,6 +52,12 @@ public class PlayerRepo(ApplicationDbContext context) : IRepo<Player>
             }
             await _context.SaveChangesAsync();
         }
-        return null;
+        return originalPlayer;
     }
+    //  var updatesPlayer = new Dictionary<string, object>
+    //                 {
+    //                     {"CurrentRoom", 0},
+    //                     {"Health", 5},
+    //                 };
+    //                 playerService.UpdateFields(updatesPlayer);
 }

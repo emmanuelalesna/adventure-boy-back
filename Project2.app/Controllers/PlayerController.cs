@@ -35,5 +35,15 @@ public class PlayerController(IService<Player> playerService) : ControllerBase
             return BadRequest(e);
         }
     }
-
+    [HttpPatch]
+    public async Task<IActionResult> ChangePlayerById(Player player)
+    {
+        Dictionary<string, object> toEdit = [];
+        toEdit.Add("CurrentRoom", player.CurrentRoom);
+        toEdit.Add("CurrentHealth", player.CurrentHealth);
+        toEdit.Add("CurrentMana", player.CurrentMana);
+        var updatedPlayer = await _playerService.UpdateEntity(player.PlayerId, toEdit);
+        if (updatedPlayer is null) return NotFound("Player cannot be found!");
+        return Ok(updatedPlayer);
+    }
 }

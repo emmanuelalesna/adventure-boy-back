@@ -20,6 +20,7 @@ builder.Services.AddCors(co =>
     {
         pb.WithOrigins("*")
         .AllowAnyHeader();
+        pb.AllowAnyMethod();
     });
 });
 
