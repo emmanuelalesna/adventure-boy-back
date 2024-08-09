@@ -1,65 +1,18 @@
-# Project 2 (Tentative Due: 8/12/24)
+# Adventure Boy: Heroes & Monsters
 
 ## Overview
 
-For P2, you and your team will create a full stack web application utilizing the technologies we've learned.
+Adventure Boy: Heroes & Monsters is a .NET fullstack web application that leverages the Scryfall API. After making an account, players fight different enemies while gaining new and more powerful equipment and spells as they progress through the game. Information about player accounts and their progress is stored on an Azure hosted SQL Server database.
 
-## Requirements
-
-- Application must build and run.
-- xUnit Testing (70% branch coverage for Services + Utilities and Models layer) for backend.
-- Utilize an external API.
-- Allows for multiple users to authenticate and store their data.
-- HTML/CSS/JS or React front-end.
-- Front end unit testing (20% coverage.)
-- Hosted on Github in our training Org in it's own repository.
-
-### Optional/Stretch Goals
-
-- JWT or IDaaS for authentication (such as ASP.NET Core Identity, or Auth0.)
-- Backend hosted on Azure Cloud Services.
-- React front end.
-- React testing.
-- Anything else you want to try... (websocket?)
-
-## Proposal (Due 8/1/24)
-
-You'll create a project proposal as a team that includes overview of the project, mvp features, and stretch goals. Include the following in your proposal:
-
-- Project Overview
-- MVP features
-- ERD
-- External API you plan on using
-- Stretch Goals
-
-These are not included in the proposal, but do discuss the following:
-
-- Git Practice/Process (merge/code review practice/branch protection)
-- Coding Convention/Practice
-- Communication standard
-  - Which medium are we going to use to communicate?
-  - At what frequency?
-- How are we managing the project board? (Github project, Jira, etc)
-
-## Technology
-
-- C# (Backend programming language)
-- EF Core (ORM)
-- SQL Server (Azure hosted)
-- ASP.NET Core (Web API Framework)
-- xUnit/Moq (Backend Testing)
-- Azure App Service (for application hosting)
-- HTML/CSS/JS or React front end.
-- Jest (Frontend testing)
-
-## Groups
-
-Group 1: Owusuduah, Unnati, Timothy, Tomy, Aser
-
-Group 2: Gabriel, Gislaine, Seamus, Otmane
-
-Group 3: Paul, Francie, Elizabeth, Alex
-
-Group 4: Wilyendri, Priyaben, Alfredo, Jonathan, Cyril
-
-Group 5: Emmanuel, Keval, Christopher, Ian
+## Adventure Boy: Heros & Monsters has fun and exciting features such as:
+- Create an account!
+- Log into your account!
+- Experience the thrill of entering the incorrect password or incorrect username!
+## Once logged in, players of Adventure Boy: Heroes & Monsters can:
+- Play through five exciting levels featuring some of the most iconic fantasy creatures
+- Swing your sword, cast a spell, or block
+- Pick up new items as you defeat more and more enemies
+- Experience the satisfaction of victory by reading a singular line of text on the screen
+- Experience the disappointment of defeat by reading a much longer paragraph describing your demise
+- Log out
+## Play Now!
