@@ -9,10 +9,11 @@ Adventure Boy: Heroes & Monsters is a .NET fullstack web application that levera
 - Log into your account!
 - Experience the thrill of entering the incorrect password or incorrect username!
 ## Once logged in, players of Adventure Boy: Heroes & Monsters can:
-- Play through five exciting levels featuring some of the most iconic fantasy creatures
+- Adventure through five exciting levels based on beautiful Magic the Gathering card art
+- Fight five monsters, also based on beautiful Magic the Gathering card art
 - Swing your sword, cast a spell, or block
 - Pick up new items as you defeat more and more enemies
 - Experience the satisfaction of victory by reading a singular line of text on the screen
 - Experience the disappointment of defeat by reading a much longer paragraph describing your demise
 - Log out
-## Play Now!
+# Play Now!
