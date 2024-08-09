@@ -25,7 +25,7 @@ namespace Project2.Tests
         public async Task CreatePlayer_ReturnsOkResult_WithCreatedPlayer()
         {
             // Arrange
-            var player = new Player { Name = "TestPlayer", Level = 1 };
+            var player = new Player { Name = "TestPlayer" };
             _mockPlayerService.Setup(service => service.CreateNewEntity(player)).ReturnsAsync(player);
 
             // Act
