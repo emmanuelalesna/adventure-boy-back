@@ -4,13 +4,9 @@ public class Player
 {
     public int PlayerId { get; set; }
     public required string Name { get; set; }
-    public int Level { get; set; } = 1;
-    public int Exp { get; set; } = 0;
     public int CurrentHealth { get; set; } = 10;
     public int CurrentMana { get; set; } = 1;
-    public int Gold { get; set; } = 0;
-    public int CurrentRoom { get; set; } = 1;
-    public List<Spell> Spells { get; set; } = [];
-    public List<Item> Items { get; set; } = [];
+    public int CurrentRoom { get; set; } = 0;
+    public int CurrentEnemyHealth { get; set; }
     public Account? AccountOwner { get; set; }
 }

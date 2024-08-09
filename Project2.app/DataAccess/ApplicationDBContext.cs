@@ -15,7 +15,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Item> Items { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<Room> Rooms { get; set; }
-    public DbSet<Shop> Shops { get; set; }
     public DbSet<Spell> Spells { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
