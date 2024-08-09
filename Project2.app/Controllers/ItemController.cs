@@ -2,32 +2,54 @@ using Microsoft.AspNetCore.Mvc;
 using Project2.app.Models;
 using Project2.app.Services;
 using Project2.app.Services.Interface;
+using System.Threading.Tasks;
 
-namespace Project2.app.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class ItemController : ControllerBase
+namespace Project2.app.Controllers
 {
-    private readonly IService<Item> _itemService;
-
-    public ItemController(IService<Item> itemService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ItemController : ControllerBase
     {
-        _itemService = itemService;
-    }
+        private readonly IService<Item> _itemService;
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        return Ok(await _itemService.GetAllEntities());
-    }
+        public ItemController(IService<Item> itemService)
+        {
+            _itemService = itemService;
+        }
 
-    [HttpGet("{item_id}")]
-    public async Task<IActionResult> GetItem(int item_id)
-    {
-        var item = await _itemService.GetEntityById(item_id);
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var items = await _itemService.GetAllEntities();
+                return Ok(items);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (optional)
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
-        if (item is null) return NotFound("Item doesn't Exist");
-        return Ok(item);
+        [HttpGet("{item_id}")]
+        public async Task<IActionResult> GetItem(int item_id)
+        {
+            try
+            {
+                var item = await _itemService.GetEntityById(item_id);
+
+                if (item == null)
+                {
+                    return NotFound("Item doesn't Exist");
+                }
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (optional)
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

@@ -1,34 +1,57 @@
 using Microsoft.AspNetCore.Mvc;
 using Project2.app.Models;
-using Project2.app.Services;
 using Project2.app.Services.Interface;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Project2.app.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SpellController(IService<Spell> spellService) : ControllerBase
+    public class SpellController : ControllerBase
     {
-        private readonly IService<Spell> _spellService = spellService;
+        private readonly IService<Spell> _spellService;
+
+        public SpellController(IService<Spell> spellService)
+        {
+            _spellService = spellService;
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Spell>>> GetAll()
         {
-            var spells = await _spellService.GetAllEntities();
-            return Ok(spells);
+            try
+            {
+                var spells = await _spellService.GetAllEntities();
+                return Ok(spells);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if needed
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Spell>> GetSpell(int id)
         {
-            var spell = await _spellService.GetEntityById(id);
-
-            if (spell == null)
+            try
             {
-                return NotFound("Spell doesn't exist");
-            }
+                var spell = await _spellService.GetEntityById(id);
 
-            return Ok(spell);
+                if (spell == null)
+                {
+                    return NotFound("Spell doesn't exist");
+                }
+
+                return Ok(spell);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if needed
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

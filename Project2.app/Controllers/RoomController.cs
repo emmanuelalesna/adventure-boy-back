@@ -24,9 +24,17 @@ public class RoomController : ControllerBase
     [HttpGet("{room_id}")]
     public async Task<IActionResult> GetRoom(int room_id)
     {
-        var room = await _roomService.GetEntityById(room_id);
-
-        if (room is null) return NotFound("Room doesn't Exist");
-        return Ok(room);
+    try
+        {
+            var room = await _roomService.GetEntityById(room_id);
+            if (room is null) return NotFound("Room doesn't Exist");
+            return Ok(room);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }   
     }
+
+
 }
