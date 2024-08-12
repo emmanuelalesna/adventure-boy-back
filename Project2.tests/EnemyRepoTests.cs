@@ -1,120 +1,102 @@
-
-/*
 using Microsoft.EntityFrameworkCore;
 using Project2.app.DataAccess;
 using Project2.app.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Project2.Tests
+namespace Project2.tests
 {
     public class EnemyRepoTests
     {
-        private readonly EnemyRepo _repo;
-        private readonly ApplicationDbContext _context;
-
-        public EnemyRepoTests()
+        private async Task<ApplicationDbContext> GetInMemoryDbContext(string databaseName)
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .UseInMemoryDatabase(databaseName: databaseName)
                 .Options;
 
-            _context = new ApplicationDbContext(options);
-            _repo = new EnemyRepo(_context);
+            var context = new ApplicationDbContext(options);
 
-            // Clear the database and seed with test data
-            SeedDatabase();
+            // Clear existing data to ensure a clean state
+            context.Enemies.RemoveRange(context.Enemies);
+            await context.SaveChangesAsync();
+
+            // Seed the database with test data
+            context.Enemies.AddRange(new List<Enemy>
+            {
+                new Enemy { EnemyId = 1, EnemyName = "Tester1", Attack = 5, Health = 30, ImageUrl = "url1" },
+                new Enemy { EnemyId = 2, EnemyName = "Tester2", Attack = 10, Health = 50, ImageUrl = "url2" }
+            });
+            await context.SaveChangesAsync();
+
+            return context;
         }
 
-        private void SeedDatabase()
+        [Fact]
+        public async Task CreateEntity_ShouldAddEnemy()
         {
-            _context.Enemies.AddRange(
-                new Enemy { EnemyId = 101, EnemyName = "Test1", Attack = 10, Health = 20, ImageUrl = "test1.png" },
-                new Enemy { EnemyId = 201, EnemyName = "Test2", Attack = 20, Health = 40, ImageUrl = "test2.png" }
-            );
-            _context.SaveChanges();
+            var context = await GetInMemoryDbContext("TestDb_CreateEntity");
+            var repo = new EnemyRepo(context);
+            var newEnemy = new Enemy { EnemyId = 3, EnemyName = "Tester3", Attack = 15, Health = 80, ImageUrl = "url3" };
+
+            var result = await repo.CreateEntity(newEnemy);
+            var createdEnemy = await context.Enemies.FindAsync(3);
+
+            Assert.NotNull(createdEnemy);
+            Assert.Equal("Tester3", createdEnemy.EnemyName);
+        }
+
+        [Fact]
+        public async Task DeleteEntity_ShouldRemoveEnemy()
+        {
+            var context = await GetInMemoryDbContext("TestDb_DeleteEntity");
+            var repo = new EnemyRepo(context);
+
+            var result = await repo.DeleteEntity(1);
+            var deletedEnemy = await context.Enemies.FindAsync(1);
+
+            Assert.NotNull(result);
+            Assert.Null(deletedEnemy);
         }
 
         [Fact]
         public async Task GetAllEntities_ShouldReturnAllEnemies()
         {
-            // Act
-            var result = await _repo.GetAllEntities();
+            var context = await GetInMemoryDbContext("TestDb_GetAllEntities");
+            var repo = new EnemyRepo(context);
 
-            // Assert
+            var result = await repo.GetAllEntities();
+
             Assert.Equal(2, result.Count);
-            Assert.Contains(result, e => e.EnemyName == "Test1");
-            Assert.Contains(result, e => e.EnemyName == "Test2");
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnEnemyWithMatchingId()
+        public async Task GetById_ShouldReturnCorrectEnemy()
         {
-            // Act
-            var result = await _repo.GetById(1);
+            var context = await GetInMemoryDbContext("TestDb_GetById");
+            var repo = new EnemyRepo(context);
 
-            // Assert
+            var result = await repo.GetById(1);
+
             Assert.NotNull(result);
-            Assert.Equal(1, result?.EnemyId);
-            Assert.Equal("Test1", result?.EnemyName);
+            Assert.Equal("Tester1", result.EnemyName);
         }
 
         [Fact]
-        public async Task CreateEntity_ShouldAddEnemyToDatabase()
+        public async Task UpdateEntity_ShouldModifyEnemy()
         {
-            // Arrange
-            var newEnemy = new Enemy { EnemyId = 3, EnemyName = "Test3", Attack = 30, Health = 60, ImageUrl = "test3.png" };
-
-            // Act
-            var result = await _repo.CreateEntity(newEnemy);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(3, result.EnemyId);
-            Assert.Equal("Test3", result.EnemyName);
-
-            var enemyInDb = await _context.Enemies.FindAsync(3);
-            Assert.NotNull(enemyInDb);
-            Assert.Equal("Test3", enemyInDb?.EnemyName);
-        }
-
-        [Fact]
-        public async Task UpdateEntity_ShouldUpdateEnemyAndSaveChanges()
-        {
-            // Arrange
+            var context = await GetInMemoryDbContext("TestDb_UpdateEntity");
+            var repo = new EnemyRepo(context);
             var updates = new Dictionary<string, object>
             {
-                { "EnemyName", "UpdatedTest1" },
-                { "Attack", 15 }
+                { "Health", 100 }
             };
 
-            // Act
-            var result = await _repo.UpdateEntity(1, updates);
+            var result = await repo.UpdateEntity(1, updates);
+            var updatedEnemy = await context.Enemies.FindAsync(1);
 
-            // Assert
-            Assert.NotNull(result);
-
-            var updatedEnemy = await _context.Enemies.FindAsync(1);
             Assert.NotNull(updatedEnemy);
-            Assert.Equal("UpdatedTest1", updatedEnemy?.EnemyName);
-            Assert.Equal(15, updatedEnemy?.Attack);
-        }
-
-        [Fact]
-        public async Task DeleteEntity_ShouldRemoveEnemyFromDatabase()
-        {
-            // Act
-            var result = await _repo.DeleteEntity(2);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result?.EnemyId);
-
-            var enemyInDb = await _context.Enemies.FindAsync(2);
-            Assert.Null(enemyInDb);
+            Assert.Equal(100, updatedEnemy.Health);
         }
     }
 }
-*/

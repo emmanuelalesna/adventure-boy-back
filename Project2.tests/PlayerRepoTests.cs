@@ -1,4 +1,3 @@
-/*
 using Microsoft.EntityFrameworkCore;
 using Project2.app.DataAccess;
 using Project2.app.Models;
@@ -6,113 +5,101 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Project2.Tests
+namespace Project2.tests
 {
     public class PlayerRepoTests
     {
-        private readonly PlayerRepo _repo;
-        private readonly DbContextOptions<ApplicationDbContext> _options;
-
-        public PlayerRepoTests()
+        private async Task<ApplicationDbContext> GetInMemoryDbContext(string databaseName)
         {
-            _options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: databaseName)
                 .Options;
 
-            using (var context = new ApplicationDbContext(_options))
-            {
-                _repo = new PlayerRepo(context);
-                SeedDatabase(context);
-            }
-        }
+            var context = new ApplicationDbContext(options);
 
-        private void SeedDatabase(ApplicationDbContext context)
-        {
-            context.Players.Add(new Player { PlayerId = 100, Name = "Hero", CurrentHealth = 100, CurrentMana = 50, CurrentRoom = 1, CurrentEnemyHealth = 80 });
-            context.Players.Add(new Player { PlayerId = 200, Name = "Villain", CurrentHealth = 75, CurrentMana = 30, CurrentRoom = 2, CurrentEnemyHealth = 60 });
-            context.SaveChanges();
+            // Clear existing data to ensure a clean state
+            context.Players.RemoveRange(context.Players);
+            await context.SaveChangesAsync();
+
+            // Seed the database with test data
+            context.Players.AddRange(new List<Player>
+            {
+                new Player { PlayerId = 1, Name = "Player1", CurrentHealth = 100, CurrentMana = 50, CurrentRoom = 1, CurrentEnemyHealth = 75 },
+                new Player { PlayerId = 2, Name = "Player2", CurrentHealth = 80, CurrentMana = 40, CurrentRoom = 2, CurrentEnemyHealth = 60 }
+            });
+            await context.SaveChangesAsync();
+
+            return context;
         }
 
         [Fact]
-        public async Task CreateEntity_ShouldAddPlayerToDatabase()
+        public async Task CreateEntity_ShouldAddPlayer()
         {
-            // Arrange
-            var newPlayer = new Player { PlayerId = 3, Name = "Sidekick", CurrentHealth = 50, CurrentMana = 25, CurrentRoom = 3, CurrentEnemyHealth = 40 };
+            var context = await GetInMemoryDbContext("TestDb_CreateEntity");
+            var repo = new PlayerRepo(context);
+            var newPlayer = new Player { PlayerId = 3, Name = "Player3", CurrentHealth = 90, CurrentMana = 45, CurrentRoom = 3, CurrentEnemyHealth = 70 };
 
-            // Act
-            var result = await _repo.CreateEntity(newPlayer);
+            var result = await repo.CreateEntity(newPlayer);
+            var createdPlayer = await context.Players.FindAsync(3);
 
-            // Assert
-            using (var context = new ApplicationDbContext(_options))
-            {
-                var player = await context.Players.FindAsync(result.PlayerId);
-                Assert.NotNull(player);
-                Assert.Equal(newPlayer.Name, player.Name);
-                Assert.Equal(newPlayer.CurrentHealth, player.CurrentHealth);
-                Assert.Equal(newPlayer.CurrentMana, player.CurrentMana);
-                Assert.Equal(newPlayer.CurrentRoom, player.CurrentRoom);
-                Assert.Equal(newPlayer.CurrentEnemyHealth, player.CurrentEnemyHealth);
-            }
+            Assert.NotNull(createdPlayer);
+            Assert.Equal("Player3", createdPlayer.Name);
+            Assert.Equal(90, createdPlayer.CurrentHealth);
+        }
+
+        [Fact]
+        public async Task DeleteEntity_ShouldRemovePlayer()
+        {
+            var context = await GetInMemoryDbContext("TestDb_DeleteEntity");
+            var repo = new PlayerRepo(context);
+
+            var result = await repo.DeleteEntity(1);
+            var deletedPlayer = await context.Players.FindAsync(1);
+
+            Assert.NotNull(result);
+            Assert.Null(deletedPlayer);
         }
 
         [Fact]
         public async Task GetAllEntities_ShouldReturnAllPlayers()
         {
-            // Act
-            var players = await _repo.GetAllEntities();
+            var context = await GetInMemoryDbContext("TestDb_GetAllEntities");
+            var repo = new PlayerRepo(context);
 
-            // Assert
-            Assert.Equal(2, players.Count); // There should be 2 players in the seed data
+            var result = await repo.GetAllEntities();
+
+            Assert.Equal(2, result.Count);
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnPlayerWithMatchingId()
+        public async Task GetById_ShouldReturnCorrectPlayer()
         {
-            // Act
-            var player = await _repo.GetById(1);
+            var context = await GetInMemoryDbContext("TestDb_GetById");
+            var repo = new PlayerRepo(context);
 
-            // Assert
-            Assert.NotNull(player);
-            Assert.Equal(1, player.PlayerId);
+            var result = await repo.GetById(1);
+
+            Assert.NotNull(result);
+            Assert.Equal("Player1", result.Name);
         }
 
         [Fact]
-        public async Task DeleteEntity_ShouldRemovePlayerFromDatabase()
+        public async Task UpdateEntity_ShouldModifyPlayer()
         {
-            // Act
-            var playerToDelete = await _repo.DeleteEntity(1);
-
-            // Assert
-            Assert.NotNull(playerToDelete);
-            using (var context = new ApplicationDbContext(_options))
-            {
-                var deletedPlayer = await context.Players.FindAsync(1);
-                Assert.Null(deletedPlayer);
-            }
-        }
-
-        [Fact]
-        public async Task UpdateEntity_ShouldUpdatePlayerAndSaveChanges()
-        {
-            // Arrange
+            var context = await GetInMemoryDbContext("TestDb_UpdateEntity");
+            var repo = new PlayerRepo(context);
             var updates = new Dictionary<string, object>
             {
-                {"CurrentHealth", 90},
-                {"CurrentMana", 60}
+                { "CurrentHealth", 120 },
+                { "CurrentRoom", 5 }
             };
 
-            // Act
-            var updatedPlayer = await _repo.UpdateEntity(1, updates);
+            var result = await repo.UpdateEntity(1, updates);
+            var updatedPlayer = await context.Players.FindAsync(1);
 
-            // Assert
-            using (var context = new ApplicationDbContext(_options))
-            {
-                var player = await context.Players.FindAsync(1);
-                Assert.Equal(90, player.CurrentHealth);
-                Assert.Equal(60, player.CurrentMana);
-            }
+            Assert.NotNull(updatedPlayer);
+            Assert.Equal(120, updatedPlayer.CurrentHealth);
+            Assert.Equal(5, updatedPlayer.CurrentRoom);
         }
     }
 }
-
-*/

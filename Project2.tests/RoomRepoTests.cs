@@ -1,4 +1,3 @@
-/*
 using Microsoft.EntityFrameworkCore;
 using Project2.app.DataAccess;
 using Project2.app.Models;
@@ -6,104 +5,98 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Project2.Tests
+namespace Project2.tests
 {
     public class RoomRepoTests
     {
-        private readonly ApplicationDbContext _context;
-        private readonly RoomRepo _repo;
-
-        public RoomRepoTests()
+        private async Task<ApplicationDbContext> GetInMemoryDbContext(string databaseName)
         {
-            // Setup in-memory database
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("TestDatabase")
+                .UseInMemoryDatabase(databaseName: databaseName)
                 .Options;
 
-            _context = new ApplicationDbContext(options);
-            _repo = new RoomRepo(_context);
+            var context = new ApplicationDbContext(options);
 
-            // Seed the database
-            SeedDatabase(_context);
+            // Clear existing data to ensure a clean state
+            context.Rooms.RemoveRange(context.Rooms);
+            await context.SaveChangesAsync();
+
+            // Seed the database with test data
+            context.Rooms.AddRange(new List<Room>
+            {
+                new Room { RoomId = 1, ImageUrl = "image1.png" },
+                new Room { RoomId = 2, ImageUrl = "image2.png" }
+            });
+            await context.SaveChangesAsync();
+
+            return context;
         }
 
-        private void SeedDatabase(ApplicationDbContext context)
+        [Fact]
+        public async Task CreateEntity_ShouldAddRoom()
         {
-            context.Rooms.Add(new Room { RoomId = 1, ImageUrl = "http://example.com/room1.jpg" });
-            context.Rooms.Add(new Room { RoomId = 2, ImageUrl = "http://example.com/room2.jpg" });
-            context.SaveChanges();
+            var context = await GetInMemoryDbContext("TestDb_CreateEntity");
+            var repo = new RoomRepo(context);
+            var newRoom = new Room { RoomId = 3, ImageUrl = "image3.png" };
+
+            var result = await repo.CreateEntity(newRoom);
+            var createdRoom = await context.Rooms.FindAsync(3);
+
+            Assert.NotNull(createdRoom);
+            Assert.Equal("image3.png", createdRoom.ImageUrl);
+        }
+
+        [Fact]
+        public async Task DeleteEntity_ShouldRemoveRoom()
+        {
+            var context = await GetInMemoryDbContext("TestDb_DeleteEntity");
+            var repo = new RoomRepo(context);
+
+            var result = await repo.DeleteEntity(1);
+            var deletedRoom = await context.Rooms.FindAsync(1);
+
+            Assert.NotNull(result);
+            Assert.Null(deletedRoom);
         }
 
         [Fact]
         public async Task GetAllEntities_ShouldReturnAllRooms()
         {
-            // Act
-            var rooms = await _repo.GetAllEntities();
+            var context = await GetInMemoryDbContext("TestDb_GetAllEntities");
+            var repo = new RoomRepo(context);
 
-            // Assert
-            Assert.Equal(2, rooms.Count);
-            Assert.Contains(rooms, r => r.ImageUrl == "http://example.com/room1.jpg");
-            Assert.Contains(rooms, r => r.ImageUrl == "http://example.com/room2.jpg");
+            var result = await repo.GetAllEntities();
+
+            Assert.Equal(2, result.Count);
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnRoomWithMatchingId()
+        public async Task GetById_ShouldReturnCorrectRoom()
         {
-            // Act
-            var room = await _repo.GetById(1);
+            var context = await GetInMemoryDbContext("TestDb_GetById");
+            var repo = new RoomRepo(context);
 
-            // Assert
-            Assert.NotNull(room);
-            Assert.Equal("http://example.com/room1.jpg", room?.ImageUrl);
+            var result = await repo.GetById(1);
+
+            Assert.NotNull(result);
+            Assert.Equal("image1.png", result.ImageUrl);
         }
 
         [Fact]
-        public async Task CreateEntity_ShouldAddRoomToDatabase()
+        public async Task UpdateEntity_ShouldModifyRoom()
         {
-            // Arrange
-            var newRoom = new Room { RoomId = 3, ImageUrl = "http://example.com/room3.jpg" };
-
-            // Act
-            var createdRoom = await _repo.CreateEntity(newRoom);
-
-            // Assert
-            Assert.NotNull(createdRoom);
-            Assert.Equal(3, createdRoom.RoomId);
-            Assert.Equal("http://example.com/room3.jpg", createdRoom.ImageUrl);
-
-            var room = await _repo.GetById(3);
-            Assert.NotNull(room);
-            Assert.Equal("http://example.com/room3.jpg", room.ImageUrl);
-        }
-
-        [Fact]
-        public async Task UpdateEntity_ShouldUpdateRoomAndSaveChanges()
-        {
-            // Arrange
+            var context = await GetInMemoryDbContext("TestDb_UpdateEntity");
+            var repo = new RoomRepo(context);
             var updates = new Dictionary<string, object>
             {
-                { "ImageUrl", "http://example.com/updated.jpg" }
+                { "ImageUrl", "updated_image.png" }
             };
 
-            // Act
-            var updatedRoom = await _repo.UpdateEntity(1, updates);
+            var result = await repo.UpdateEntity(1, updates);
+            var updatedRoom = await context.Rooms.FindAsync(1);
 
-            // Assert
             Assert.NotNull(updatedRoom);
-            var room = await _repo.GetById(1);
-            Assert.Equal("http://example.com/updated.jpg", room?.ImageUrl);
-        }
-
-        [Fact]
-        public async Task DeleteEntity_ShouldRemoveRoomFromDatabase()
-        {
-            // Act
-            var deletedRoom = await _repo.DeleteEntity(2);
-
-            // Assert
-            Assert.NotNull(deletedRoom);
-            Assert.Null(await _repo.GetById(2));
+            Assert.Equal("updated_image.png", updatedRoom.ImageUrl);
         }
     }
 }
-*/

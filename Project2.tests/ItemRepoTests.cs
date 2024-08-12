@@ -1,112 +1,102 @@
-/*
 using Microsoft.EntityFrameworkCore;
 using Project2.app.DataAccess;
 using Project2.app.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Project2.Tests
+namespace Project2.tests
 {
     public class ItemRepoTests
     {
-        private readonly ItemRepo _repo;
-        private readonly DbContextOptions<ApplicationDbContext> _options;
-
-        public ItemRepoTests()
+        private async Task<ApplicationDbContext> GetInMemoryDbContext(string databaseName)
         {
-            _options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: databaseName)
                 .Options;
 
-            using (var context = new ApplicationDbContext(_options))
-            {
-                _repo = new ItemRepo(context);
-                SeedDatabase(context);
-            }
-        }
+            var context = new ApplicationDbContext(options);
 
-        private void SeedDatabase(ApplicationDbContext context)
-        {
-            context.Items.Add(new Item { ItemId = 1, ItemName = "Sword", Attack = 10, ImageUrl = "sword.png" });
-            context.Items.Add(new Item { ItemId = 2, ItemName = "Shield", Attack = 5, ImageUrl = "shield.png" });
-            context.SaveChanges();
+            // Clear existing data to ensure a clean state
+            context.Items.RemoveRange(context.Items);
+            await context.SaveChangesAsync();
+
+            // Seed the database with test data
+            context.Items.AddRange(new List<Item>
+            {
+                new Item { ItemId = 1, ItemName = "Testing1", Attack = 10, ImageUrl = "testing1.png" },
+                new Item { ItemId = 2, ItemName = "Testing2", Attack = 5, ImageUrl = "testing2.png" }
+            });
+            await context.SaveChangesAsync();
+
+            return context;
         }
 
         [Fact]
-        public async Task CreateEntity_ShouldAddItemToDatabase()
+        public async Task CreateEntity_ShouldAddItem()
         {
-            // Arrange
-            var newItem = new Item { ItemId = 3, ItemName = "Helmet", Attack = 3, ImageUrl = "helmet.png" };
+            var context = await GetInMemoryDbContext("TestDb_CreateEntity");
+            var repo = new ItemRepo(context);
+            var newItem = new Item { ItemId = 3, ItemName = "Testing3", Attack = 20, ImageUrl = "testing3.png" };
 
-            // Act
-            var result = await _repo.CreateEntity(newItem);
+            var result = await repo.CreateEntity(newItem);
+            var createdItem = await context.Items.FindAsync(3);
 
-            // Assert
-            using (var context = new ApplicationDbContext(_options))
-            {
-                var item = await context.Items.FindAsync(result.ItemId);
-                Assert.NotNull(item);
-                Assert.Equal("Helmet", item.ItemName);
-            }
+            Assert.NotNull(createdItem);
+            Assert.Equal("Testing3", createdItem.ItemName);
+        }
+
+        [Fact]
+        public async Task DeleteEntity_ShouldRemoveItem()
+        {
+            var context = await GetInMemoryDbContext("TestDb_DeleteEntity");
+            var repo = new ItemRepo(context);
+
+            var result = await repo.DeleteEntity(1);
+            var deletedItem = await context.Items.FindAsync(1);
+
+            Assert.NotNull(result);
+            Assert.Null(deletedItem);
         }
 
         [Fact]
         public async Task GetAllEntities_ShouldReturnAllItems()
         {
-            // Act
-            var result = await _repo.GetAllEntities();
+            var context = await GetInMemoryDbContext("TestDb_GetAllEntities");
+            var repo = new ItemRepo(context);
 
-            // Assert
-            Assert.Equal(2, result.Count); // Adjust count based on your seed data
+            var result = await repo.GetAllEntities();
+
+            Assert.Equal(2, result.Count);
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnItemWithMatchingId()
+        public async Task GetById_ShouldReturnCorrectItem()
         {
-            // Act
-            var result = await _repo.GetById(1);
+            var context = await GetInMemoryDbContext("TestDb_GetById");
+            var repo = new ItemRepo(context);
 
-            // Assert
+            var result = await repo.GetById(1);
+
             Assert.NotNull(result);
-            Assert.Equal("Sword", result.ItemName);
+            Assert.Equal("Testing1", result.ItemName);
         }
 
         [Fact]
-        public async Task DeleteEntity_ShouldRemoveItemFromDatabase()
+        public async Task UpdateEntity_ShouldModifyItem()
         {
-            // Act
-            var result = await _repo.DeleteEntity(1);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal("Sword", result.ItemName);
-
-            using (var context = new ApplicationDbContext(_options))
+            var context = await GetInMemoryDbContext("TestDb_UpdateEntity");
+            var repo = new ItemRepo(context);
+            var updates = new Dictionary<string, object>
             {
-                var item = await context.Items.FindAsync(1);
-                Assert.Null(item);
-            }
-        }
+                { "Attack", 25 }
+            };
 
-        [Fact]
-        public async Task UpdateEntity_ShouldUpdateItemAndSaveChanges()
-        {
-            // Arrange
-            var updates = new Dictionary<string, object> { { "ItemName", "Updated Sword" } };
+            var result = await repo.UpdateEntity(1, updates);
+            var updatedItem = await context.Items.FindAsync(1);
 
-            // Act
-            var result = await _repo.UpdateEntity(1, updates);
-
-            // Assert
-            using (var context = new ApplicationDbContext(_options))
-            {
-                var item = await context.Items.FindAsync(1);
-                Assert.NotNull(item);
-                Assert.Equal("Updated Sword", item.ItemName);
-            }
+            Assert.NotNull(updatedItem);
+            Assert.Equal(25, updatedItem.Attack);
         }
     }
 }
-*/

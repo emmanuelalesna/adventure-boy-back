@@ -1,12 +1,11 @@
-using Xunit;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
 using Project2.app.Controllers;
 using Project2.app.Models;
 using Project2.app.Services.Interface;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Project2.Tests
 {
