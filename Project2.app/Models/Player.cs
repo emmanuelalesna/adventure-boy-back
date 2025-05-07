@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Project2.app.Models;
 
 public class Player
 {
+    [Key]
     public int PlayerId { get; set; }
     public required string Name { get; set; }
     public int CurrentHealth { get; set; } = 10;

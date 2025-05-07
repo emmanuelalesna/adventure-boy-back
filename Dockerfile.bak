@@ -1,0 +1,17 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /app
+
+COPY Project2.app /app/Project2.app
+
+RUN dotnet publish Project2.app -c Release -o dist
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS run
+
+ENV ASPNETCORE_URLS=http://*:80
+
+WORKDIR /app
+
+COPY --from=build /app/dist .
+
+CMD [ "dotnet", "Project2.app.dll" ]
