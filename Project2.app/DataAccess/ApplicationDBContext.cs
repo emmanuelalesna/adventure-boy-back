@@ -10,7 +10,7 @@ public class ApplicationDbContext : DbContext
 
     public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
-    
+
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Enemy> Enemies { get; set; }
     public DbSet<Item> Items { get; set; }
@@ -24,7 +24,6 @@ public class ApplicationDbContext : DbContext
         .HasOne(p => p.AccountOwner)
         .WithOne(a => a.OwnedPlayer)
         .HasForeignKey<Player>(p => p.PlayerId);
-
 
         //room 1 information
         modelBuilder.Entity<Enemy>().HasData(new Enemy { EnemyId = 1, EnemyName = "Angry Wolf", Attack = 1, Health = 3, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=end-the-festivities" });

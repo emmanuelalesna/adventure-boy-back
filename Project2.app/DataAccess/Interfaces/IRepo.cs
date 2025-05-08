@@ -19,4 +19,5 @@ public interface IAccountRepo
     Task<List<Account>> GetAllEntities();
     Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates);
     Task<Account?> DeleteEntity(int id);
+    Task<Account?> LoginUser(Account user);
 }

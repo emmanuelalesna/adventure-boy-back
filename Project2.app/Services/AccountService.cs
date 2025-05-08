@@ -60,4 +60,9 @@ public class AccountService(IAccountRepo IAccountRepo) : IAccountService
     {
         throw new NotImplementedException();
     }
+
+    public async Task<Account?> Login(Account account)
+    {
+        return await _accountRepo.LoginUser(account);
+    }
 }

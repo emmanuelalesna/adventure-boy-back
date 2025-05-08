@@ -58,8 +58,28 @@ namespace Project2.app.Controllers
         public async Task<IActionResult> GetEntityByUsername(string username)
         {
             var account = await _accountService.GetEntityByUsername(username);
-            if (account is null) return NotFound("Account not found.");
-            return Ok(account);
+            if (account is null)
+            {
+                return NotFound("Account not found.");
+            }
+            else
+            {
+                return Ok(account);
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] Account account)
+        {
+            var loginResult = await _accountService.Login(account);
+            if (loginResult is not null)
+            {
+                return Ok(loginResult);
+            }
+            else
+            {
+                return Unauthorized("Incorrect password");
+            }
         }
         // Get account by ID
         /*
