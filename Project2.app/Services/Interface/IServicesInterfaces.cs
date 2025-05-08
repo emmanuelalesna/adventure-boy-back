@@ -24,4 +24,5 @@ public interface IAccountService
     Task<Account?> GetEntityById(int id);
     Task<List<Account>> GetAllEntities();
     Task<Account?> GetEntityByUsername(string username);
+    Task<Account?>Login(Account account);
 }
