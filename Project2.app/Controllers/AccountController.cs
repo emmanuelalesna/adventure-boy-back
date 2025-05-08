@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Project2.app.Models;
+using Project2.app.DTOs;
 using Project2.app.Services.Interface;
 
 namespace Project2.app.Controllers
@@ -17,7 +17,7 @@ namespace Project2.app.Controllers
 
         // Create a new account
         [HttpPost]
-        public async Task<IActionResult> CreateAccount([FromBody] Account account)
+        public async Task<IActionResult> CreateAccount([FromBody] AccountDTO account)
         {
             if (account == null || string.IsNullOrWhiteSpace(account.Username) || string.IsNullOrWhiteSpace(account.Password))
             {
@@ -69,16 +69,23 @@ namespace Project2.app.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Account account)
+        public async Task<IActionResult> Login([FromBody] AccountDTO account)
         {
-            var loginResult = await _accountService.Login(account);
-            if (loginResult is not null)
+            try
             {
-                return Ok(loginResult);
+                var loginResult = await _accountService.Login(account);
+                if (loginResult is not null)
+                {
+                    return Ok(loginResult);
+                }
+                else
+                {
+                    return Unauthorized("Incorrect password");
+                }
             }
-            else
+            catch (Exception e)
             {
-                return Unauthorized("Incorrect password");
+                return BadRequest(e.Message);
             }
         }
         // Get account by ID

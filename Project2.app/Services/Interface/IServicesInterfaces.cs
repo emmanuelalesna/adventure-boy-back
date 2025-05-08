@@ -1,3 +1,4 @@
+using Project2.app.DTOs;
 using Project2.app.Models;
 
 namespace Project2.app.Services.Interface;
@@ -18,11 +19,11 @@ public interface IService<Type>
 
 public interface IAccountService
 {
-    Task<Account> CreateNewEntity(Account entityToCreate);
+    Task<Account> CreateNewEntity(AccountDTO entityToCreate);
     Task<Account?> DeleteEntity(int id);
     Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates);
     Task<Account?> GetEntityById(int id);
     Task<List<Account>> GetAllEntities();
     Task<Account?> GetEntityByUsername(string username);
-    Task<Account?>Login(Account account);
+    Task<Account?>Login(AccountDTO account);
 }

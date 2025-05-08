@@ -1,19 +1,22 @@
 using Project2.app.DataAccess.Interfaces;
+using Project2.app.DTOs;
 using Project2.app.Models;
 using Project2.app.Services.Interface;
+using Project2.app.Utilities;
 
 namespace Project2.app.Services;
 
 public class AccountService(IAccountRepo IAccountRepo) : IAccountService
 {
     private readonly IAccountRepo _accountRepo = IAccountRepo;
-    public async Task<Account> CreateNewEntity(Account entityToCreate)
+    public async Task<Account> CreateNewEntity(AccountDTO entityToCreate)
     {
         try
         {
             if (entityToCreate.Username != null && entityToCreate.Password != null)
             {
-                return await _accountRepo.CreateEntity(entityToCreate);
+                Account account1 = DTOUtilities.DTOToAccount(entityToCreate);
+                return await _accountRepo.CreateEntity(account1);
             }
             else
             {
@@ -61,8 +64,16 @@ public class AccountService(IAccountRepo IAccountRepo) : IAccountService
         throw new NotImplementedException();
     }
 
-    public async Task<Account?> Login(Account account)
+    public async Task<Account?> Login(AccountDTO account)
     {
-        return await _accountRepo.LoginUser(account);
+        if (account.Username is not null && account.Password is not null)
+        {
+            Account account1 = DTOUtilities.DTOToAccount(account);
+            return await _accountRepo.LoginUser(account1);
+        }
+        else
+        {
+            throw new InvalidDataException("login information is incomplete");
+        }
     }
 }
