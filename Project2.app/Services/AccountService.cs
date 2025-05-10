@@ -64,11 +64,11 @@ public class AccountService(IAccountRepo IAccountRepo) : IAccountService
         throw new NotImplementedException();
     }
 
-    public async Task<Account?> Login(AccountDTO account)
+    public async Task<Account?> Login(AccountDTO accountDTO)
     {
-        if (account.Username is not null && account.Password is not null)
+        if (accountDTO.Username is not null && accountDTO.Password is not null)
         {
-            Account account1 = DTOUtilities.DTOToAccount(account);
+            Account account1 = DTOUtilities.DTOToAccount(accountDTO);
             return await _accountRepo.LoginUser(account1);
         }
         else

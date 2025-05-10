@@ -76,7 +76,9 @@ namespace Project2.app.Controllers
                 var loginResult = await _accountService.Login(account);
                 if (loginResult is not null)
                 {
-                    return Ok(loginResult);
+                    AccountReturnDTO account1 = new() { AccountId = loginResult.AccountId, Username = loginResult.Username, OwnedPlayer = loginResult.OwnedPlayer };
+
+                    return Ok(account1);
                 }
                 else
                 {
