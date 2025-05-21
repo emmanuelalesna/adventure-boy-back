@@ -26,7 +26,10 @@ namespace Project2.app.Controllers
 
             try
             {
-                return Ok(await _accountService.CreateNewEntity(account));
+                // Console.WriteLine(account.Username);
+                var result = await _accountService.CreateNewEntity(account);
+                if (result.Succeeded) return Ok(result.ToString());
+                return Unauthorized(result.Errors);
             }
             catch (InvalidDataException e)
             {
@@ -76,7 +79,7 @@ namespace Project2.app.Controllers
                 var loginResult = await _accountService.Login(account);
                 if (loginResult is not null)
                 {
-                    AccountReturnDTO account1 = new() { AccountId = loginResult.AccountId, Username = loginResult.Username, OwnedPlayer = loginResult.OwnedPlayer };
+                    AccountReturnDTO account1 = new() { AccountId = loginResult.AccountId, Username = loginResult.FirstName, OwnedPlayer = loginResult.OwnedPlayer };
 
                     return Ok(account1);
                 }

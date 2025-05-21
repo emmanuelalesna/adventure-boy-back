@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Project2.app.DataAccess.Interfaces;
 using Project2.app.DTOs;
 using Project2.app.Models;
@@ -6,17 +7,23 @@ using Project2.app.Utilities;
 
 namespace Project2.app.Services;
 
-public class AccountService(IAccountRepo IAccountRepo) : IAccountService
+public class AccountService(IAccountRepo IAccountRepo, SignInManager<Account> signInManager, UserManager<Account> userManager) : IAccountService
 {
     private readonly IAccountRepo _accountRepo = IAccountRepo;
-    public async Task<Account> CreateNewEntity(AccountDTO entityToCreate)
+    private readonly SignInManager<Account> _signInManager = signInManager;
+    private readonly UserManager<Account> _userManager = userManager;
+
+    public async Task<IdentityResult> CreateNewEntity(AccountDTO entityToCreate)
     {
         try
         {
             if (entityToCreate.Username != null && entityToCreate.Password != null)
             {
                 Account account1 = DTOUtilities.DTOToAccount(entityToCreate);
-                return await _accountRepo.CreateEntity(account1);
+                // return await _accountRepo.CreateEntity(account1);
+                Console.WriteLine(account1);
+                Console.WriteLine(entityToCreate.Username);
+                return await _userManager.CreateAsync(account1, entityToCreate.Password);
             }
             else
             {

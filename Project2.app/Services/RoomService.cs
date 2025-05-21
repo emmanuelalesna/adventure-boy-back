@@ -4,7 +4,8 @@ using Project2.app.Services.Interface;
 
 namespace Project2.app.Services;
 
-public class RoomService(IRepo<Room> IRoomRepo) : IService<Room> {
+public class RoomService(IRepo<Room> IRoomRepo) : IService<Room>
+{
 
     private readonly IRepo<Room> _RoomRepo = IRoomRepo;
 

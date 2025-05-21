@@ -25,7 +25,7 @@ public class AccountRepo(ApplicationDbContext context) : IAccountRepo
     }
     public async Task<Account?> GetByUsername(string username)
     {
-        return await _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.Username == username);
+        return await _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.FirstName == username);
     }
     public async Task<List<Account>> GetAllEntities()
     {
@@ -59,6 +59,6 @@ public class AccountRepo(ApplicationDbContext context) : IAccountRepo
 
     public Task<Account?> LoginUser(Account account)
     {
-        return _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.Username == account.Username && a.Password == account.Password);
+        return _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.FirstName == account.FirstName && a.Password == account.Password);
     }
 }

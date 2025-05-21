@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project2.app", "Project2.app\Project2.app.csproj", "{B60BC4B7-F8EA-4ED1-8681-6A5820629541}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactApp1.Server", "..\..\..\..\..\source\repos\ReactApp1\ReactApp1.Server\ReactApp1.Server.csproj", "{63737F78-0FBB-1095-8BAE-620E1662B0C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,10 +17,10 @@ Global
 		{B60BC4B7-F8EA-4ED1-8681-6A5820629541}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B60BC4B7-F8EA-4ED1-8681-6A5820629541}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B60BC4B7-F8EA-4ED1-8681-6A5820629541}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC371B54-6A50-4474-A87B-BA24C7A8EC36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC371B54-6A50-4474-A87B-BA24C7A8EC36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC371B54-6A50-4474-A87B-BA24C7A8EC36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC371B54-6A50-4474-A87B-BA24C7A8EC36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63737F78-0FBB-1095-8BAE-620E1662B0C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63737F78-0FBB-1095-8BAE-620E1662B0C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63737F78-0FBB-1095-8BAE-620E1662B0C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63737F78-0FBB-1095-8BAE-620E1662B0C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

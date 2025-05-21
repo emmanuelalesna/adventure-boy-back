@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Project2.app.DTOs;
 using Project2.app.Models;
 
@@ -19,11 +20,11 @@ public interface IService<Type>
 
 public interface IAccountService
 {
-    Task<Account> CreateNewEntity(AccountDTO entityToCreate);
+    Task<IdentityResult> CreateNewEntity(AccountDTO entityToCreate);
     Task<Account?> DeleteEntity(int id);
     Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates);
     Task<Account?> GetEntityById(int id);
     Task<List<Account>> GetAllEntities();
     Task<Account?> GetEntityByUsername(string username);
-    Task<Account?>Login(AccountDTO account);
+    Task<Account?> Login(AccountDTO account);
 }

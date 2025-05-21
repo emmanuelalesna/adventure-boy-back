@@ -7,7 +7,7 @@ public static class DTOUtilities
 {
     public static Account DTOToAccount(AccountDTO accountDTO)
     {
-        Account account = new() { AccountId = accountDTO.AccountId, Username = accountDTO.Username, Password = accountDTO.Password, OwnedPlayer = accountDTO.OwnedPlayer };
+        Account account = new() { AccountId = accountDTO.AccountId, FirstName = accountDTO.Username, Password = accountDTO.Password, OwnedPlayer = accountDTO.OwnedPlayer, UserName = accountDTO.Username };
         return account;
     }
 }

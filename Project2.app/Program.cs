@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Project2.app.DataAccess;
 using Project2.app.DataAccess.Interfaces;
 using Project2.app.Models;
 using Project2.app.Services;
 using Project2.app.Services.Interface;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+    {
+        options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey
+        });
+        options.OperationFilter<SecurityRequirementsOperationFilter>();
+    });
 
 builder.Services.AddCors(co =>
 {
@@ -25,7 +36,7 @@ builder.Services.AddCors(co =>
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalTest")));
 
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IRepo<Enemy>, EnemyRepo>();
@@ -46,6 +57,8 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
+
+builder.Services.AddIdentityApiEndpoints<Account>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
