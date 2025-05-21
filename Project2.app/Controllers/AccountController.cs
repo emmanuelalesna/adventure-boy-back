@@ -19,7 +19,7 @@ namespace Project2.app.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] AccountDTO account)
         {
-            if (account == null || string.IsNullOrWhiteSpace(account.Username) || string.IsNullOrWhiteSpace(account.Password))
+            if (account == null || string.IsNullOrWhiteSpace(account.UserName) || string.IsNullOrWhiteSpace(account.Password))
             {
                 return BadRequest("Username and Password are required.");
             }

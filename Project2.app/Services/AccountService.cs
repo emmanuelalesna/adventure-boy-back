@@ -17,12 +17,10 @@ public class AccountService(IAccountRepo IAccountRepo, SignInManager<Account> si
     {
         try
         {
-            if (entityToCreate.Username != null && entityToCreate.Password != null)
+            if (entityToCreate.UserName != null && entityToCreate.Password != null)
             {
                 Account account1 = DTOUtilities.DTOToAccount(entityToCreate);
                 // return await _accountRepo.CreateEntity(account1);
-                Console.WriteLine(account1);
-                Console.WriteLine(entityToCreate.Username);
                 return await _userManager.CreateAsync(account1, entityToCreate.Password);
             }
             else
@@ -73,7 +71,7 @@ public class AccountService(IAccountRepo IAccountRepo, SignInManager<Account> si
 
     public async Task<Account?> Login(AccountDTO accountDTO)
     {
-        if (accountDTO.Username is not null && accountDTO.Password is not null)
+        if (accountDTO.UserName is not null && accountDTO.Password is not null)
         {
             Account account1 = DTOUtilities.DTOToAccount(accountDTO);
             return await _accountRepo.LoginUser(account1);

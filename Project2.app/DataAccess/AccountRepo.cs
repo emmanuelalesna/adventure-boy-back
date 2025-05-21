@@ -59,6 +59,7 @@ public class AccountRepo(ApplicationDbContext context) : IAccountRepo
 
     public Task<Account?> LoginUser(Account account)
     {
-        return _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.FirstName == account.FirstName && a.Password == account.Password);
+        // return _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.FirstName == account.FirstName && a.Password == account.Password);
+        throw new NotImplementedException();
     }
 }
