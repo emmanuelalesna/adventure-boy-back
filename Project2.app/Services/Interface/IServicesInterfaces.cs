@@ -15,16 +15,28 @@ public interface IService<Type>
     Task<Type?> GetEntityById(int id);
 
     Task<List<Type>> GetAllEntities();
+}
 
+public interface IPlayerService
+{
+    Task<Player> CreateNewEntity(Player entityToCreate);
+
+    Task<Player?> DeleteEntity(string id);
+
+    Task<Player?> UpdateEntity(string id, Dictionary<string, object> updates);
+
+    Task<Player?> GetEntityById(string id);
+
+    Task<List<Player>> GetAllEntities();
 }
 
 public interface IAccountService
 {
     Task<IdentityResult> CreateNewEntity(AccountDTO entityToCreate);
-    Task<Account?> DeleteEntity(int id);
-    Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates);
-    Task<Account?> GetEntityById(int id);
+    Task<Account?> DeleteEntity(string id);
+    Task<Account?> UpdateEntity(string id, Dictionary<string, object> updates);
+    Task<Account?> GetEntityById(string id);
     Task<List<Account>> GetAllEntities();
     Task<Account?> GetEntityByUsername(string username);
-    Task<Account?> Login(AccountDTO account);
+    Task<SignInResult> Login(AccountDTO account);
 }

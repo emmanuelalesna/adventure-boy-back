@@ -11,13 +11,22 @@ public interface IRepo<Type>
     Task<Type?> DeleteEntity(int id);
 }
 
+public interface IPlayerRepo
+{
+    Task<Player> CreateEntity(Player entity);
+    Task<Player?> GetById(string id);
+    Task<List<Player>> GetAllEntities();
+    Task<Player?> UpdateEntity(string id, Dictionary<string, object> updates);
+    Task<Player> DeleteEntity(string id);
+}
+
 public interface IAccountRepo
 {
     Task<Account> CreateEntity(Account entity);
-    Task<Account?> GetById(int id);
+    Task<Account?> GetById(string id);
     Task<Account?> GetByUsername(string username);
     Task<List<Account>> GetAllEntities();
-    Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates);
-    Task<Account?> DeleteEntity(int id);
+    Task<Account?> UpdateEntity(string id, Dictionary<string, object> updates);
+    Task<Account?> DeleteEntity(string id);
     Task<Account?> LoginUser(Account user);
 }

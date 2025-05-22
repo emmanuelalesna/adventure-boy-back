@@ -6,14 +6,9 @@ namespace Project2.app.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController(IAccountService accountService) : ControllerBase
     {
-        private readonly IAccountService _accountService;
-
-        public AccountController(IAccountService accountService)
-        {
-            _accountService = accountService;
-        }
+        private readonly IAccountService _accountService = accountService;
 
         // Create a new account
         [HttpPost]
@@ -26,7 +21,6 @@ namespace Project2.app.Controllers
 
             try
             {
-                // Console.WriteLine(account.Username);
                 var result = await _accountService.CreateNewEntity(account);
                 if (result.Succeeded) return Ok(result.ToString());
                 return Unauthorized(result.Errors);
@@ -76,16 +70,18 @@ namespace Project2.app.Controllers
         {
             try
             {
+                // Console.WriteLine(account.UserName);
+                // Console.WriteLine(account.Password);
                 var loginResult = await _accountService.Login(account);
-                if (loginResult is not null)
+                Console.WriteLine(loginResult);
+                if (loginResult is not null && loginResult.Succeeded)
                 {
-                    AccountReturnDTO account1 = new() { AccountId = loginResult.AccountId, Username = loginResult.FirstName, OwnedPlayer = loginResult.OwnedPlayer };
-
-                    return Ok(account1);
+                    // AccountReturnDTO account1 = new() { AccountId = loginResult.AccountId, Username = loginResult.FirstName, OwnedPlayer = loginResult.OwnedPlayer };
+                    return Ok(loginResult.ToString());
                 }
                 else
                 {
-                    return Unauthorized("Incorrect password");
+                    return Unauthorized(loginResult.ToString());
                 }
             }
             catch (Exception e)
@@ -135,7 +131,7 @@ namespace Project2.app.Controllers
         */
         // Delete account by ID
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount(int id)
+        public async Task<IActionResult> DeleteAccount(string id)
         {
             try
             {

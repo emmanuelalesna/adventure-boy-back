@@ -35,7 +35,7 @@ public class AccountService(IAccountRepo IAccountRepo, SignInManager<Account> si
         }
     }
 
-    public async Task<Account?> DeleteEntity(int id)
+    public async Task<Account?> DeleteEntity(string id)
     {
         try
         {
@@ -59,22 +59,25 @@ public class AccountService(IAccountRepo IAccountRepo, SignInManager<Account> si
         return await _accountRepo.GetByUsername(username);
     }
 
-    public async Task<Account?> GetEntityById(int id)
+    public async Task<Account?> GetEntityById(string id)
     {
         return await _accountRepo.GetById(id);
     }
 
-    public Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates)
+    public Task<Account?> UpdateEntity(string id, Dictionary<string, object> updates)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Account?> Login(AccountDTO accountDTO)
+    public async Task<SignInResult> Login(AccountDTO accountDTO)
     {
         if (accountDTO.UserName is not null && accountDTO.Password is not null)
         {
             Account account1 = DTOUtilities.DTOToAccount(accountDTO);
-            return await _accountRepo.LoginUser(account1);
+            // return await _accountRepo.LoginUser(account1);
+            Console.WriteLine(account1.UserName);
+            Console.WriteLine(accountDTO.Password);
+            return await _signInManager.PasswordSignInAsync(account1.UserName, accountDTO.Password, false, false);
         }
         else
         {
