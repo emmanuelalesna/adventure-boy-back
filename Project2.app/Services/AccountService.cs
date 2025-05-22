@@ -84,4 +84,9 @@ public class AccountService(IAccountRepo IAccountRepo, SignInManager<Account> si
             throw new InvalidDataException("login information is incomplete");
         }
     }
+
+    public async Task Logout()
+    {
+        await _signInManager.SignOutAsync();
+    }
 }

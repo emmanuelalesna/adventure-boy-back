@@ -39,4 +39,5 @@ public interface IAccountService
     Task<List<Account>> GetAllEntities();
     Task<Account?> GetEntityByUsername(string username);
     Task<SignInResult> Login(AccountDTO account);
+    Task Logout();
 }

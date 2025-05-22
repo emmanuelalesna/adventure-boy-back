@@ -25,7 +25,7 @@ public class AccountRepo(ApplicationDbContext context) : IAccountRepo
     }
     public async Task<Account?> GetByUsername(string username)
     {
-        return await _context.Users.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.FirstName == username);
+        return await _context.Users.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.UserName == username);
     }
     public async Task<List<Account>> GetAllEntities()
     {

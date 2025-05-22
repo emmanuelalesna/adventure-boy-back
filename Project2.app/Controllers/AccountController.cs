@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project2.app.DTOs;
 using Project2.app.Services.Interface;
@@ -11,7 +12,7 @@ namespace Project2.app.Controllers
         private readonly IAccountService _accountService = accountService;
 
         // Create a new account
-        [HttpPost]
+        /* [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] AccountDTO account)
         {
             if (account == null || string.IsNullOrWhiteSpace(account.UserName) || string.IsNullOrWhiteSpace(account.Password))
@@ -33,10 +34,10 @@ namespace Project2.app.Controllers
             {
                 return BadRequest(e.Message);
             }
-        }
+        } */
 
         // Get all accounts
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetAllAccounts()
         {
             try
@@ -51,7 +52,7 @@ namespace Project2.app.Controllers
         }
 
         // Get by username
-        [HttpGet("{username}")]
+        [HttpGet("{username}"), Authorize]
         public async Task<IActionResult> GetEntityByUsername(string username)
         {
             var account = await _accountService.GetEntityByUsername(username);
@@ -65,30 +66,30 @@ namespace Project2.app.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] AccountDTO account)
-        {
-            try
-            {
-                // Console.WriteLine(account.UserName);
-                // Console.WriteLine(account.Password);
-                var loginResult = await _accountService.Login(account);
-                Console.WriteLine(loginResult);
-                if (loginResult is not null && loginResult.Succeeded)
-                {
-                    // AccountReturnDTO account1 = new() { AccountId = loginResult.AccountId, Username = loginResult.FirstName, OwnedPlayer = loginResult.OwnedPlayer };
-                    return Ok(loginResult.ToString());
-                }
-                else
-                {
-                    return Unauthorized(loginResult.ToString());
-                }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        /*  [HttpPost("login")]
+         public async Task<IActionResult> Login([FromBody] AccountDTO account)
+         {
+             try
+             {
+                 // Console.WriteLine(account.UserName);
+                 // Console.WriteLine(account.Password);
+                 var loginResult = await _accountService.Login(account);
+                 Console.WriteLine(loginResult);
+                 if (loginResult is not null && loginResult.Succeeded)
+                 {
+                     // AccountReturnDTO account1 = new() { AccountId = loginResult.AccountId, Username = loginResult.FirstName, OwnedPlayer = loginResult.OwnedPlayer };
+                     return Ok(loginResult.ToString());
+                 }
+                 else
+                 {
+                     return Unauthorized(loginResult.ToString());
+                 }
+             }
+             catch (Exception e)
+             {
+                 return BadRequest(e.Message);
+             }
+         } */
         // Get account by ID
         /*
         [HttpGet("{id}")]
@@ -130,7 +131,7 @@ namespace Project2.app.Controllers
                 }
         */
         // Delete account by ID
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteAccount(string id)
         {
             try
@@ -141,6 +142,20 @@ namespace Project2.app.Controllers
                     return NotFound("Account not found.");
                 }
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("logout"), Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await _accountService.Logout();
+                return Ok("logged out successfully");
             }
             catch (Exception e)
             {
