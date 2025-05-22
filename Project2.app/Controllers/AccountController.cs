@@ -1,6 +1,6 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Project2.app.DTOs;
 using Project2.app.Services.Interface;
 
 namespace Project2.app.Controllers
@@ -161,6 +161,24 @@ namespace Project2.app.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+        [HttpGet("id"), Authorize]
+        public IActionResult GetAccountId()
+        {
+            try
+            {
+                string? account = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (account is not null)
+                {
+                    return Ok(account);
+                }
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
     }
 }
