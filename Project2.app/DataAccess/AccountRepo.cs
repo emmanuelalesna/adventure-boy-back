@@ -25,7 +25,7 @@ public class AccountRepo(ApplicationDbContext context) : IAccountRepo
     }
     public async Task<Account?> GetByUsername(string username)
     {
-        return await _context.Users.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.UserName == username);
+        return await _context.Users.Include(a => a.Players).FirstOrDefaultAsync(a => a.UserName == username);
     }
     public async Task<List<Account>> GetAllEntities()
     {
@@ -34,7 +34,7 @@ public class AccountRepo(ApplicationDbContext context) : IAccountRepo
 
     public async Task<Account?> GetById(string id)
     {
-        return await _context.Users.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(t => t.Id == id);
+        return await _context.Users.Include(a => a.Players).FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<Account?> UpdateEntity(string id, Dictionary<string, object> updates)

@@ -23,10 +23,10 @@ public class ApplicationDbContext : IdentityDbContext<Account>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Player>()
-        .HasOne(p => p.AccountOwner)
-        .WithMany(a => a.OwnedPlayer)
-        .HasForeignKey(p => p.PlayerId);
+        // modelBuilder.Entity<Player>()
+        // .HasOne(p => p.AccountOwner)
+        // .WithMany(a => a.OwnedPlayer)
+        // .HasForeignKey(p => p.PlayerId);
 
         //room 1 information
         modelBuilder.Entity<Enemy>().HasData(new Enemy { EnemyId = 1, EnemyName = "Angry Wolf", Attack = 1, Health = 3, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=end-the-festivities" });

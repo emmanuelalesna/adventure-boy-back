@@ -4,7 +4,7 @@ using Project2.app.Models;
 
 namespace Project2.app.DataAccess;
 
-public class PlayerRepo(ApplicationDbContext context) : IPlayerRepo
+public class PlayerRepo(ApplicationDbContext context) : IRepo<Player>
 {
 
     private readonly ApplicationDbContext _context = context;
@@ -16,7 +16,7 @@ public class PlayerRepo(ApplicationDbContext context) : IPlayerRepo
         return player;
     }
 
-    public async Task<Player?> DeleteEntity(string id)
+    public async Task<Player?> DeleteEntity(int id)
     {
         var toDelete = await GetById(id);
         if (toDelete is null) return null;
@@ -30,12 +30,12 @@ public class PlayerRepo(ApplicationDbContext context) : IPlayerRepo
         return await _context.Players.ToListAsync();
     }
 
-    public async Task<Player?> GetById(string id)
+    public async Task<Player?> GetById(int id)
     {
         return await _context.Players.FirstOrDefaultAsync(t => t.PlayerId == id);
     }
 
-    public async Task<Player?> UpdateEntity(string id, Dictionary<string, object> updates)
+    public async Task<Player?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
         var originalPlayer = await GetById(id);
 

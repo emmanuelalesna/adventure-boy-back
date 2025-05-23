@@ -4,9 +4,9 @@ using Project2.app.Services.Interface;
 
 namespace Project2.app.Services;
 
-public class PlayerService(IPlayerRepo playerRepo) : IPlayerService
+public class PlayerService(IRepo<Player> playerRepo) : IService<Player>
 {
-    private readonly IPlayerRepo _playerRepo = playerRepo;
+    private readonly IRepo<Player> _playerRepo = playerRepo;
 
     public async Task<Player> CreateNewEntity(Player entityToCreate)
     {
@@ -28,7 +28,7 @@ public class PlayerService(IPlayerRepo playerRepo) : IPlayerService
         }
     }
 
-    public Task<Player?> DeleteEntity(string id)
+    public Task<Player?> DeleteEntity(int id)
     {
         throw new NotImplementedException();
     }
@@ -38,12 +38,12 @@ public class PlayerService(IPlayerRepo playerRepo) : IPlayerService
         return await _playerRepo.GetAllEntities();
     }
 
-    public async Task<Player?> GetEntityById(string id)
+    public async Task<Player?> GetEntityById(int id)
     {
         return await _playerRepo.GetById(id);
     }
 
-    public async Task<Player?> UpdateEntity(string id, Dictionary<string, object> updates)
+    public async Task<Player?> UpdateEntity(int id, Dictionary<string, object> updates)
     {
         return await _playerRepo.UpdateEntity(id, updates);
     }

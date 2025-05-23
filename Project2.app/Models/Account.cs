@@ -8,5 +8,5 @@ public class Account : IdentityUser
     // [Key]
     // public int? AccountId { get; set; }
     public string? FirstName { get; set; }
-    public ICollection<Player>? OwnedPlayer { get; set; }
+    public ICollection<Player> Players { get; set; } = [];
 }

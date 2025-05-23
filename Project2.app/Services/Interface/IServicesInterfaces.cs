@@ -17,19 +17,6 @@ public interface IService<Type>
     Task<List<Type>> GetAllEntities();
 }
 
-public interface IPlayerService
-{
-    Task<Player> CreateNewEntity(Player entityToCreate);
-
-    Task<Player?> DeleteEntity(string id);
-
-    Task<Player?> UpdateEntity(string id, Dictionary<string, object> updates);
-
-    Task<Player?> GetEntityById(string id);
-
-    Task<List<Player>> GetAllEntities();
-}
-
 public interface IAccountService
 {
     Task<IdentityResult> CreateNewEntity(AccountDTO entityToCreate);

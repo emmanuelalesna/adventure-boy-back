@@ -44,14 +44,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IRepo<Enemy>, EnemyRepo>();
 builder.Services.AddScoped<IRepo<Item>, ItemRepo>();
-builder.Services.AddScoped<IPlayerRepo, PlayerRepo>();
+builder.Services.AddScoped<IRepo<Player>, PlayerRepo>();
 builder.Services.AddScoped<IRepo<Room>, RoomRepo>();
 builder.Services.AddScoped<IRepo<Spell>, SpellRepo>();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IService<Enemy>, EnemyService>();
 builder.Services.AddScoped<IService<Item>, ItemService>();
-builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<IService<Player>, PlayerService>();
 builder.Services.AddScoped<IService<Room>, RoomService>();
 builder.Services.AddScoped<IService<Spell>, SpellService>();
 

@@ -6,9 +6,9 @@ namespace Project2.app.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PlayerController(IPlayerService playerService) : ControllerBase
+public class PlayerController(IService<Player> playerService) : ControllerBase
 {
-    private readonly IPlayerService _playerService = playerService;
+    private readonly IService<Player> _playerService = playerService;
 
     [HttpPost]
     public async Task<IActionResult> CreatePlayer(Player player)
@@ -22,7 +22,7 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
         return Ok(await _playerService.GetAllEntities());
     }
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetPlayerById(string id)
+    public async Task<IActionResult> GetPlayerById(int id)
     {
         try
         {
