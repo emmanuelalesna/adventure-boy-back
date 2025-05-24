@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project2.app.DTOs;
 using Project2.app.Models;
 using Project2.app.Services.Interface;
+using Project2.app.Utilities;
 
 namespace Project2.app.Controllers;
 
@@ -14,30 +16,46 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
     [HttpPost, Authorize]
     public async Task<IActionResult> CreatePlayer(Player player)
     {
-        return Ok(await _playerService.CreateNewEntity(player));
-    }
-
-    [HttpGet("{account}"), Authorize]
-    public async Task<IActionResult> GetAllPlayers(string account)
-    {
         try
         {
-            var res = _playerService.GetAllEntities(account);
-            return Ok(await res);
+            var newPlayer = await _playerService.CreateNewEntity(player);
+            var routeValues = new
+            {
+                action = "GetPlayerById",
+                accountId = newPlayer.AccountId,
+                playerId = newPlayer.PlayerId
+            };
+            return CreatedAtAction(nameof(GetPlayerById), routeValues, DTOUtilities.PlayerToDTO(newPlayer));
         }
         catch (Exception e)
         {
             return BadRequest(e.Message);
         }
     }
-    [HttpGet("{account}/{id}"), Authorize]
-    public async Task<IActionResult> GetPlayerById(string account, int id)
+
+    [HttpGet("{accountId}/all"), Authorize]
+    public async Task<IActionResult> GetAllPlayers(string accountId)
     {
         try
         {
-            var player = await _playerService.GetEntityById(account, id);
+            var res = await _playerService.GetAllEntities(accountId);
+            var playerList = res.Select(i => DTOUtilities.PlayerToDTO(i));
+            return Ok(playerList);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    [HttpGet("{accountId}"), Authorize]
+    public async Task<IActionResult> GetPlayerById(string accountId, [FromQuery] int playerId)
+    {
+        try
+        {
+            var player = await _playerService.GetEntityById(accountId, playerId);
             if (player is null) return NotFound("Player does not exist");
-            return Ok(player);
+            PlayerDTO playerDTO = DTOUtilities.PlayerToDTO(player);
+            return Ok(playerDTO);
         }
         catch (Exception e)
         {
