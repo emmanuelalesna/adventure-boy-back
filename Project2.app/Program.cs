@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Project2.app.DataAccess;
@@ -44,14 +46,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IRepo<Enemy>, EnemyRepo>();
 builder.Services.AddScoped<IRepo<Item>, ItemRepo>();
-builder.Services.AddScoped<IRepo<Player>, PlayerRepo>();
+builder.Services.AddScoped<IPlayerRepo, PlayerRepo>();
 builder.Services.AddScoped<IRepo<Room>, RoomRepo>();
 builder.Services.AddScoped<IRepo<Spell>, SpellRepo>();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IService<Enemy>, EnemyService>();
 builder.Services.AddScoped<IService<Item>, ItemService>();
-builder.Services.AddScoped<IService<Player>, PlayerService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IService<Room>, RoomService>();
 builder.Services.AddScoped<IService<Spell>, SpellService>();
 
@@ -64,6 +66,8 @@ builder.Services.AddControllers()
 builder.Services.AddIdentityApiEndpoints<Account>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme).Configure(options => { options.BearerTokenExpiration = TimeSpan.FromHours(1); });
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

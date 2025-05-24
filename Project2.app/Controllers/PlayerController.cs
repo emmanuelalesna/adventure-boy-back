@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project2.app.Models;
 using Project2.app.Services.Interface;
@@ -6,27 +7,35 @@ namespace Project2.app.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PlayerController(IService<Player> playerService) : ControllerBase
+public class PlayerController(IPlayerService playerService) : ControllerBase
 {
-    private readonly IService<Player> _playerService = playerService;
+    private readonly IPlayerService _playerService = playerService;
 
-    [HttpPost]
+    [HttpPost, Authorize]
     public async Task<IActionResult> CreatePlayer(Player player)
     {
         return Ok(await _playerService.CreateNewEntity(player));
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllPlayers()
-    {
-        return Ok(await _playerService.GetAllEntities());
-    }
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetPlayerById(int id)
+    [HttpGet("{account}"), Authorize]
+    public async Task<IActionResult> GetAllPlayers(string account)
     {
         try
         {
-            var player = await _playerService.GetEntityById(id);
+            var res = _playerService.GetAllEntities(account);
+            return Ok(await res);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    [HttpGet("{account}/{id}"), Authorize]
+    public async Task<IActionResult> GetPlayerById(string account, int id)
+    {
+        try
+        {
+            var player = await _playerService.GetEntityById(account, id);
             if (player is null) return NotFound("Player does not exist");
             return Ok(player);
         }
@@ -35,7 +44,7 @@ public class PlayerController(IService<Player> playerService) : ControllerBase
             return BadRequest(e);
         }
     }
-    [HttpPatch]
+    [HttpPatch, Authorize]
     public async Task<IActionResult> ChangePlayerById(Player player)
     {
         Dictionary<string, object> toEdit = [];

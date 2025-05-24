@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Project2.app.DataAccess.Interfaces;
 using Project2.app.Models;
 
 namespace Project2.app.DataAccess;
 
-public class PlayerRepo(ApplicationDbContext context) : IRepo<Player>
+public class PlayerRepo(ApplicationDbContext context) : IPlayerRepo
 {
 
     private readonly ApplicationDbContext _context = context;
@@ -30,9 +31,19 @@ public class PlayerRepo(ApplicationDbContext context) : IRepo<Player>
         return await _context.Players.ToListAsync();
     }
 
+    public async Task<List<Player>> GetAllEntities(string id)
+    {
+        return await _context.Players.Where(i => i.AccountId == id).ToListAsync();
+    }
+
     public async Task<Player?> GetById(int id)
     {
-        return await _context.Players.FirstOrDefaultAsync(t => t.PlayerId == id);
+        return await _context.Players.FirstOrDefaultAsync(p => p.PlayerId == id);
+    }
+
+    public async Task<Player?> GetById(string account, int id)
+    {
+        return await _context.Players.Where(i => i.AccountId == account).FirstOrDefaultAsync(p => p.PlayerId == id);
     }
 
     public async Task<Player?> UpdateEntity(int id, Dictionary<string, object> updates)

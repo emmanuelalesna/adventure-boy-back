@@ -17,6 +17,12 @@ public interface IService<Type>
     Task<List<Type>> GetAllEntities();
 }
 
+public interface IPlayerService : IService<Player>
+{
+    Task<Player?> GetEntityById(string account, int id);
+    Task<List<Player>> GetAllEntities(string id);
+}
+
 public interface IAccountService
 {
     Task<IdentityResult> CreateNewEntity(AccountDTO entityToCreate);

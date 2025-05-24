@@ -11,6 +11,12 @@ public interface IRepo<Type>
     Task<Type?> DeleteEntity(int id);
 }
 
+public interface IPlayerRepo : IRepo<Player>
+{
+    Task<Player?> GetById(string account, int id);
+    Task<List<Player>> GetAllEntities(string id);
+}
+
 public interface IAccountRepo
 {
     Task<Account> CreateEntity(Account entity);
