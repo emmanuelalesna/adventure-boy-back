@@ -9,5 +9,5 @@ public class Player
     public int CurrentMana { get; set; } = 1;
     public int CurrentRoom { get; set; } = 0;
     public int CurrentEnemyHealth { get; set; }
-    public Account? Account { get; set; } = null!;
+    // public Account? Account { get; set; } = null!;
 }

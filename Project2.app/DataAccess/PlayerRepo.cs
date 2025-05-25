@@ -55,7 +55,7 @@ public class PlayerRepo(ApplicationDbContext context) : IPlayerRepo
             foreach (var update in updates)
             {
                 var property = originalPlayer.GetType().GetProperty(update.Key);
-                if (property != null & property.CanWrite)
+                if (property != null && property.CanWrite)
                 {
                     property.SetValue(originalPlayer, update.Value);
                 }
