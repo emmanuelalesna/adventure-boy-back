@@ -28,9 +28,9 @@ public class PlayerService(IPlayerRepo playerRepo) : IPlayerService
         }
     }
 
-    public Task<Player?> DeleteEntity(int id)
+    public async Task<Player?> DeleteEntity(int id)
     {
-        throw new NotImplementedException();
+        return await _playerRepo.DeleteEntity(id);
     }
 
     public async Task<List<Player>> GetAllEntities()
@@ -47,7 +47,7 @@ public class PlayerService(IPlayerRepo playerRepo) : IPlayerService
     {
         return await _playerRepo.GetById(id);
     }
-    
+
     public async Task<Player?> GetEntityById(string account, int id)
     {
         return await _playerRepo.GetById(account, id);

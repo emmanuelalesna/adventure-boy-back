@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Project2.app.DTOs;
 using Project2.app.Models;
+using Project2.app.Services;
 using Project2.app.Services.Interface;
 using Project2.app.Utilities;
 
@@ -14,7 +17,7 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
     private readonly IPlayerService _playerService = playerService;
 
     [HttpPost, Authorize]
-    public async Task<IActionResult> CreatePlayer(Player player)
+    public async Task<ActionResult<PlayerDTO>> CreatePlayer(Player player)
     {
         try
         {
@@ -34,13 +37,13 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
     }
 
     [HttpGet("{accountId}/all"), Authorize]
-    public async Task<IActionResult> GetAllPlayers(string accountId)
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers(string accountId)
     {
         try
         {
             var res = await _playerService.GetAllEntities(accountId);
-            var playerList = res.Select(i => DTOUtilities.PlayerToDTO(i));
-            return Ok(playerList);
+            var playerList = res.Select(i => DTOUtilities.PlayerToDTO(i)).ToList();
+            return playerList;
         }
         catch (Exception e)
         {
@@ -48,14 +51,14 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
         }
     }
     [HttpGet("{accountId}"), Authorize]
-    public async Task<IActionResult> GetPlayerById(string accountId, [FromQuery] int playerId)
+    public async Task<ActionResult<PlayerDTO>> GetPlayerById(string accountId, [FromQuery] int playerId)
     {
         try
         {
             var player = await _playerService.GetEntityById(accountId, playerId);
             if (player is null) return NotFound("Player does not exist");
             PlayerDTO playerDTO = DTOUtilities.PlayerToDTO(player);
-            return Ok(playerDTO);
+            return playerDTO;
         }
         catch (Exception e)
         {
@@ -72,5 +75,26 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
         var updatedPlayer = await _playerService.UpdateEntity(player.PlayerId, toEdit);
         if (updatedPlayer is null) return NotFound("Player cannot be found!");
         return Ok(updatedPlayer);
+    }
+
+    [HttpDelete("{id}"), Authorize]
+    public async Task<IActionResult> DeletePlayer(int id)
+    {
+        try
+        {
+            var result = await _playerService.DeleteEntity(id);
+            if (result is not null)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound("Player id does not exist");
+            }
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }
