@@ -65,6 +65,18 @@ public class PlayerRepo(ApplicationDbContext context) : IPlayerRepo
         }
         return originalPlayer;
     }
+
+    public async Task<Player?> UpdatePlayerName(int id, string name)
+    {
+        var player = await GetById(id);
+        if (player is not null)
+        {
+            player.Name = name;
+            await _context.SaveChangesAsync();
+            return player;
+        }
+        return player;
+    }
     //  var updatesPlayer = new Dictionary<string, object>
     //                 {
     //                     {"CurrentRoom", 0},

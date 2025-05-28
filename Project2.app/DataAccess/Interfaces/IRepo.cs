@@ -15,6 +15,7 @@ public interface IPlayerRepo : IRepo<Player>
 {
     Task<Player?> GetById(string account, int id);
     Task<List<Player>> GetAllEntities(string id);
+    Task<Player?> UpdatePlayerName(int id, string name);
 }
 
 public interface IAccountRepo

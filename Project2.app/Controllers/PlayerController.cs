@@ -97,4 +97,25 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [HttpPatch("{id}"), Authorize]
+    public async Task<IActionResult> UpdatePlayerName(int id, [FromQuery] string name)
+    {
+        try
+        {
+            var result = await _playerService.UpdatePlayerName(id, name);
+            if (result is not null)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound("Player id does not exist");
+            }
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

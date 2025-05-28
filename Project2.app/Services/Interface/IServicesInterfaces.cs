@@ -21,6 +21,7 @@ public interface IPlayerService : IService<Player>
 {
     Task<Player?> GetEntityById(string account, int id);
     Task<List<Player>> GetAllEntities(string id);
+    Task<Player?> UpdatePlayerName(int id, string name);
 }
 
 public interface IAccountService

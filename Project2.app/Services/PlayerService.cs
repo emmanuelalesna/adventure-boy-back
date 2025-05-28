@@ -58,6 +58,10 @@ public class PlayerService(IPlayerRepo playerRepo) : IPlayerService
         return await _playerRepo.UpdateEntity(id, updates);
     }
 
+    public async Task<Player?> UpdatePlayerName(int id, string name)
+    {
+        return await _playerRepo.UpdatePlayerName(id, name);
+    }
 
     /*
     public void UpdateFields(int PlayerID, Dictionary<string, object> updates)
