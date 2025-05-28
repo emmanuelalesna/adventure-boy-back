@@ -10,34 +10,34 @@ public class AccountRepo(ApplicationDbContext context) : IAccountRepo
 
     public async Task<Account> CreateEntity(Account account)
     {
-        _context.Accounts.Add(account);
+        _context.Users.Add(account);
         await _context.SaveChangesAsync();
         return account;
     }
 
-    public async Task<Account?> DeleteEntity(int id)
+    public async Task<Account?> DeleteEntity(string id)
     {
         var toDelete = await GetById(id);
         if (toDelete is null) return null;
-        _context.Accounts.Remove(toDelete);
+        _context.Users.Remove(toDelete);
         await _context.SaveChangesAsync();
         return toDelete;
     }
     public async Task<Account?> GetByUsername(string username)
     {
-        return await _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.Username == username);
+        return await _context.Users.Include(a => a.Players).FirstOrDefaultAsync(a => a.UserName == username);
     }
     public async Task<List<Account>> GetAllEntities()
     {
-        return await _context.Accounts.ToListAsync();
+        return await _context.Users.ToListAsync();
     }
 
-    public async Task<Account?> GetById(int id)
+    public async Task<Account?> GetById(string id)
     {
-        return await _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(t => t.AccountId == id);
+        return await _context.Users.Include(a => a.Players).FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public async Task<Account?> UpdateEntity(int id, Dictionary<string, object> updates)
+    public async Task<Account?> UpdateEntity(string id, Dictionary<string, object> updates)
     {
         var originalAccount = await GetById(id);
 
@@ -57,8 +57,9 @@ public class AccountRepo(ApplicationDbContext context) : IAccountRepo
         return null;
     }
 
-    public Task<Account?> LoginUser(Account user)
+    public Task<Account?> LoginUser(Account account)
     {
-        return _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.Username == user.Username && a.Password == user.Password);
+        // return _context.Accounts.Include(a => a.OwnedPlayer).FirstOrDefaultAsync(a => a.FirstName == account.FirstName && a.Password == account.Password);
+        throw new NotImplementedException();
     }
 }

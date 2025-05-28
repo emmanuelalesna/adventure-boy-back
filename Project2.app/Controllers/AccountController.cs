@@ -1,32 +1,30 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Project2.app.Models;
 using Project2.app.Services.Interface;
 
 namespace Project2.app.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController(IAccountService accountService) : ControllerBase
     {
-        private readonly IAccountService _accountService;
-
-        public AccountController(IAccountService accountService)
-        {
-            _accountService = accountService;
-        }
+        private readonly IAccountService _accountService = accountService;
 
         // Create a new account
-        [HttpPost]
-        public async Task<IActionResult> CreateAccount([FromBody] Account account)
+        /* [HttpPost]
+        public async Task<IActionResult> CreateAccount([FromBody] AccountDTO account)
         {
-            if (account == null || string.IsNullOrWhiteSpace(account.Username) || string.IsNullOrWhiteSpace(account.Password))
+            if (account == null || string.IsNullOrWhiteSpace(account.UserName) || string.IsNullOrWhiteSpace(account.Password))
             {
                 return BadRequest("Username and Password are required.");
             }
 
             try
             {
-                return Ok(await _accountService.CreateNewEntity(account));
+                var result = await _accountService.CreateNewEntity(account);
+                if (result.Succeeded) return Ok(result.ToString());
+                return Unauthorized(result.Errors);
             }
             catch (InvalidDataException e)
             {
@@ -36,10 +34,10 @@ namespace Project2.app.Controllers
             {
                 return BadRequest(e.Message);
             }
-        }
+        } */
 
         // Get all accounts
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetAllAccounts()
         {
             try
@@ -54,7 +52,7 @@ namespace Project2.app.Controllers
         }
 
         // Get by username
-        [HttpGet("{username}")]
+        [HttpGet("{username}"), Authorize]
         public async Task<IActionResult> GetEntityByUsername(string username)
         {
             var account = await _accountService.GetEntityByUsername(username);
@@ -68,19 +66,30 @@ namespace Project2.app.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Account account)
-        {
-            var loginResult = await _accountService.Login(account);
-            if (loginResult is not null)
-            {
-                return Ok(loginResult);
-            }
-            else
-            {
-                return Unauthorized("Incorrect password");
-            }
-        }
+        /*  [HttpPost("login")]
+         public async Task<IActionResult> Login([FromBody] AccountDTO account)
+         {
+             try
+             {
+                 // Console.WriteLine(account.UserName);
+                 // Console.WriteLine(account.Password);
+                 var loginResult = await _accountService.Login(account);
+                 Console.WriteLine(loginResult);
+                 if (loginResult is not null && loginResult.Succeeded)
+                 {
+                     // AccountReturnDTO account1 = new() { AccountId = loginResult.AccountId, Username = loginResult.FirstName, OwnedPlayer = loginResult.OwnedPlayer };
+                     return Ok(loginResult.ToString());
+                 }
+                 else
+                 {
+                     return Unauthorized(loginResult.ToString());
+                 }
+             }
+             catch (Exception e)
+             {
+                 return BadRequest(e.Message);
+             }
+         } */
         // Get account by ID
         /*
         [HttpGet("{id}")]
@@ -122,8 +131,8 @@ namespace Project2.app.Controllers
                 }
         */
         // Delete account by ID
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount(int id)
+        [HttpDelete("{id}"), Authorize]
+        public async Task<IActionResult> DeleteAccount(string id)
         {
             try
             {
@@ -138,6 +147,38 @@ namespace Project2.app.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpGet("logout"), Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await _accountService.Logout();
+                return Ok("logged out successfully");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpGet("id"), Authorize]
+        public IActionResult GetAccountId()
+        {
+            try
+            {
+                string? account = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (account is not null)
+                {
+                    return Ok(account);
+                }
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
     }
 }

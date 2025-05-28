@@ -24,7 +24,7 @@ public class RoomController : ControllerBase
     [HttpGet("{room_id}")]
     public async Task<IActionResult> GetRoom(int room_id)
     {
-    try
+        try
         {
             var room = await _roomService.GetEntityById(room_id);
             if (room is null) return NotFound("Room doesn't Exist");
@@ -33,7 +33,7 @@ public class RoomController : ControllerBase
         catch (Exception e)
         {
             return BadRequest(e.Message);
-        }   
+        }
     }
 
 

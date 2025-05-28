@@ -7,3 +7,5 @@ appsettings.json
 /Project2.tests/bin
 /Project2.tests/coveragereport
 /Project2.tests/TestResults
+
+/.vs

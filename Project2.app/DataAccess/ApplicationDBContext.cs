@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Project2.app.Models;
 
 namespace Project2.app.DataAccess;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<Account>
 {
 
     public ApplicationDbContext() { }
@@ -11,7 +12,7 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
 
-    public DbSet<Account> Accounts { get; set; }
+    // public DbSet<Account> Accounts { get; set; }
     public DbSet<Enemy> Enemies { get; set; }
     public DbSet<Item> Items { get; set; }
     public DbSet<Player> Players { get; set; }
@@ -20,10 +21,12 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Player>()
-        .HasOne(p => p.AccountOwner)
-        .WithOne(a => a.OwnedPlayer)
-        .HasForeignKey<Player>(p => p.PlayerId);
+        base.OnModelCreating(modelBuilder);
+
+        // modelBuilder.Entity<Player>()
+        // .HasOne(p => p.AccountOwner)
+        // .WithMany(a => a.OwnedPlayer)
+        // .HasForeignKey(p => p.PlayerId);
 
         //room 1 information
         modelBuilder.Entity<Enemy>().HasData(new Enemy { EnemyId = 1, EnemyName = "Angry Wolf", Attack = 1, Health = 3, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=end-the-festivities" });
@@ -74,8 +77,4 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Spell>().HasData(new Spell { SpellId = 5, SpellName = "Magic Missile", Attack = 6, ManaCost = 5, ImageUrl = "https://api.scryfall.com/cards/named?fuzzy=magic-missile" });
     }
-
-
-
-
 }
